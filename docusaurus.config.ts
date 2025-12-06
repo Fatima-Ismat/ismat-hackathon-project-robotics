@@ -15,15 +15,15 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://your-username.github.io',
+  url: 'https://Fatima-Ismat.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/project-robotics/',
+  baseUrl: '/ismat-hackathon-project-robotics/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'your-username', // Usually your GitHub org/user name.
-  projectName: 'project-robotics', // Usually your repo name.
+  organizationName: 'Fatima-Ismat', // Usually your GitHub org/user name.
+  projectName: 'ismat-hackathon-project-robotics', // Usually your repo name.
 
   // Custom fields for RAG backend URL
   customFields: {
@@ -119,12 +119,8 @@ const config: Config = {
           title: 'More',
           items: [
             {
-              label: 'Blog',
-              to: '/blog',
-            },
-            {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              href: 'https://github.com/Fatima-Ismat/ismat-hackathon-project-robotics',
             },
           ],
         },
