@@ -1,0 +1,54 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #667eea;
+  --ifm-color-primary-dark: #5568e6;
+  --ifm-color-primary-darker: #4a5ee4;
+  --ifm-color-primary-darkest: #2f42da;
+  --ifm-color-primary-light: #7b8eee;
+  --ifm-color-primary-lighter: #8a9af0;
+  --ifm-color-primary-lightest: #b0baf5;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  /* Glassmorphism variables for light mode */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  --gradient-start: #667eea;
+  --gradient-end: #764ba2;
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #7b8eee;
+  --ifm-color-primary-dark: #6175eb;
+  --ifm-color-primary-darker: #5568e6;
+  --ifm-color-primary-darkest: #3a4dd9;
+  --ifm-color-primary-light: #95a7f1;
+  --ifm-color-primary-lighter: #a6b5f3;
+  --ifm-color-primary-lightest: #cad2f8;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+
+  /* Glassmorphism variables for dark mode */
+  --glass-bg: rgba(0, 0, 0, 0.2);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --gradient-start: #667eea;
+  --gradient-end: #764ba2;
+}
+
+/* Glassmorphism card styles */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 10px;
+}

@@ -1,0 +1,57 @@
+/**
+ * Mobile-first responsive CSS
+ * Breakpoints: 375px (mobile), 768px (tablet), 1920px (desktop)
+ */
+
+/* Base mobile styles (375px and up) */
+@media screen and (min-width: 375px) {
+  /* Touch target sizing - minimum 44x44px */
+  .navbar__link,
+  .menu__link,
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Prevent horizontal scrolling */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Readable line length on mobile */
+  .markdown {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+}
+
+/* Tablet breakpoint (768px and up) */
+@media screen and (min-width: 768px) {
+  .markdown {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+}
+
+/* Desktop breakpoint (1920px and up) */
+@media screen and (min-width: 1920px) {
+  .markdown {
+    max-width: 1200px;
+  }
+}
+
+/* Mobile-specific navigation */
+@media screen and (max-width: 996px) {
+  .navbar__item {
+    padding: 0.5rem 0;
+  }
+
+  .navbar__toggle {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
