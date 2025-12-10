@@ -1,21 +1,54 @@
-# Dependencies
-/node_modules
-
-# Production
-/build
-
-# Generated files
-.docusaurus
-.cache-loader
-
-# Misc
-.DS_Store
+# ============================
+# Python / Backend
+# ============================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.example
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+.uv/
+pip-wheel-metadata/
+*.dist-info/
+*.lock
+app.py
 
+# ============================
+# IDE / Editor
+# ============================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# ============================
+# Logs & OS junk
+# ============================
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
+
+# ============================
+# Misc / temp / backup
+# ============================
+*.tmp
+*.bak
+*.swp
+*~
+
+# ============================
+# Book / Data Files (Sensitive)
+# ============================
+book.txt
