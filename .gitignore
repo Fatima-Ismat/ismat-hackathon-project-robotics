@@ -1,0 +1,71 @@
+# ============================
+# Python / Backend
+# ============================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.env
+.env.example
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+.uv/
+backend/venv/
+backend/.venv/
+backend/.env
+*.pyc
+*.pyo
+
+pip-wheel-metadata/
+*.dist-info/
+*.lock
+app.py
+
+# ============================
+# IDE / Editor
+# ============================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# ============================
+# Logs & OS junk
+# ============================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
+
+# ============================
+# Misc / temp / backup
+# ============================
+*.tmp
+*.bak
+*.swp
+*~
+
+# ============================
+# Build / Node / History
+# ============================
+.docusaurus/
+build/
+node_modules/
+history/
+specs/
+
+# ============================
+# Specific files to ignore
+# ============================
+DEPLOY.md
+backendschemas.py
+.claude/settings.local.json
