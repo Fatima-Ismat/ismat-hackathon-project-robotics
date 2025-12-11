@@ -49,6 +49,17 @@ Thumbs.db
 *~
 
 # ============================
-# Book / Data Files (Sensitive)
+# Build / Node / History
 # ============================
-book.txt
+.docusaurus/
+build/
+node_modules/
+history/
+specs/
+
+# ============================
+# Specific files to ignore
+# ============================
+DEPLOY.md
+backendschemas.py
+.claude/settings.local.json
