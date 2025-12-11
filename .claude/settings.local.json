@@ -13,7 +13,10 @@
       "Bash(npx create-docusaurus@latest . classic --typescript)",
       "Bash(test:*)",
       "SlashCommand(/sp.implement --phases 5-6 --mode batch --yes)",
-      "Bash(pwsh:*)"
+      "Bash(pwsh:*)",
+      "SlashCommand(/sp.constitution:*)",
+      "Bash(mkdir:*)",
+      "Bash(python test_openai_key.py:*)"
     ],
     "deny": [],
     "ask": []

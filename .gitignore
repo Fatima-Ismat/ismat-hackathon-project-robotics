@@ -15,6 +15,12 @@ ENV/
 env.bak/
 venv.bak/
 .uv/
+backend/venv/
+backend/.venv/
+backend/.env
+*.pyc
+*.pyo
+
 pip-wheel-metadata/
 *.dist-info/
 *.lock
