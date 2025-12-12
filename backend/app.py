@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 import requests
 import xml.etree.ElementTree as ET
 import trafilatura
@@ -9,17 +11,26 @@ from urllib3.util import Retry
 from requests.adapters import HTTPAdapter
 
 # =====================================
-# CONFIG
+# Load environment variables from .env
 # =====================================
+load_dotenv()
+
 SITEMAP_URL = "https://fatima-ismat.github.io/ismat-hackathon-project-robotics/sitemap.xml"
 COLLECTION_NAME = "robotics_textbook"
 
-cohere_client = cohere.Client("nxXj9Nat4kh5hmsrWmLv0igdyWa8g1mD5LgiCnT5")
+COHERE_API_KEY = os.getenv("COHERE_API_KEY")
+QDRANT_URL = os.getenv("QDRANT_URL")
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+
+# =====================================
+# Initialize clients
+# =====================================
+cohere_client = cohere.Client(COHERE_API_KEY)
 EMBED_MODEL = "embed-english-v3.0"
 
 qdrant_client = QdrantClient(
-    url="https://1136ec4a-56aa-4c6e-aa74-8c47b4fb146c.europe-west3-0.gcp.cloud.qdrant.io:6333",
-    api_key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.-RH52ZBpCXWrQiXkG3R79Rue5T_PFVcJFIJPDKx-WQs",
+    url=QDRANT_URL,
+    api_key=QDRANT_API_KEY,
 )
 
 # Safe session for requests
@@ -35,11 +46,8 @@ session.mount("https://", adapter)
 def get_all_urls(sitemap_url):
     xml = session.get(sitemap_url, timeout=20).text
     root = ET.fromstring(xml)
-    urls = []
-    for child in root:
-        loc = child.find("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")
-        if loc is not None:
-            urls.append(loc.text)
+    urls = [child.find("{http://www.sitemaps.org/schemas/sitemap/0.9}loc").text
+            for child in root if child.find("{http://www.sitemaps.org/schemas/sitemap/0.9}loc") is not None]
     print(f"\nFound {len(urls)} URLs")
     return urls
 
@@ -63,9 +71,6 @@ def chunk_text(text, max_chars=1200):
     start = 0
     while start < len(text):
         end = start + max_chars
-        if end >= len(text):
-            chunks.append(text[start:])
-            break
         split_pos = text.rfind(". ", start, end)
         if split_pos == -1:
             split_pos = end
@@ -90,7 +95,7 @@ def create_collection():
 
 def save_chunk_to_qdrant(chunk, chunk_id, url):
     vector = embed(chunk)
-    time.sleep(1.2)  # Yeh line sabse zaroori hai — rate limit safe!
+    time.sleep(1.2)  # Rate limit safe
     qdrant_client.upsert(
         collection_name=COLLECTION_NAME,
         points=[PointStruct(id=chunk_id, vector=vector, payload={"url": url, "text": chunk})]
@@ -103,7 +108,6 @@ def ingest_book():
     urls = get_all_urls(SITEMAP_URL)
     create_collection()
     global_id = 1
-
     for url in urls:
         print(f"\nProcessing → {url}")
         text = extract_text_from_url(url)
@@ -114,8 +118,7 @@ def ingest_book():
             save_chunk_to_qdrant(chunk, global_id, url)
             print(f"   Saved chunk {global_id}")
             global_id += 1
-        time.sleep(1)  # Thodi saans lene de server ko
-
+        time.sleep(1)
     print(f"\nINGESTION COMPLETE! Total chunks stored: {global_id - 1} chunks")
 
 if __name__ == "__main__":
