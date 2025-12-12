@@ -1,0 +1,86 @@
+===========================================
+QUICK FIX: Copy-Paste Commands (Windows)
+===========================================
+
+# Step 1: Navigate to backend
+cd C:\Users\user\Desktop\project-robotics\backend
+
+# Step 2: Create virtual environment
+python -m venv venv
+
+# Step 3: Activate virtual environment
+venv\Scripts\activate.bat
+
+# Step 4: Upgrade pip
+python -m pip install --upgrade pip
+
+# Step 5: Install all dependencies (FIXED VERSIONS)
+pip install -r requirements.txt
+
+# Step 6: Verify installation
+python -c "import cohere; import qdrant_client; import fastapi; print('✅ All imports successful')"
+
+# Step 7: Create .env file (then edit with your API keys)
+copy nul .env
+notepad .env
+
+# Step 8: Verify book.txt exists
+dir book.txt
+
+# Step 9: Run ingestion (book.txt already created for you)
+python ingest.py
+
+# Step 10: Start server
+uvicorn main:app --reload
+
+# Open browser: http://localhost:8000/chat-ui
+
+===========================================
+WHAT WAS FIXED:
+===========================================
+✅ requirements.txt: psycopg2-binary 2.9.7 → 2.9.11
+✅ requirements.txt: Added protobuf==4.25.5
+✅ book.txt: Created comprehensive sample (84 chunks)
+✅ Cohere warnings: Optional, safe to ignore
+✅ All dependencies now compatible
+
+===========================================
+REQUIRED .env VARIABLES:
+===========================================
+COHERE_API_KEY=your_key_here
+QDRANT_URL=https://your-cluster.qdrant.io
+QDRANT_API_KEY=your_key_here
+COLLECTION_NAME=robotics_textbook
+DATABASE_URL=postgresql+asyncpg://user:pass@host/db
+OPENAI_API_KEY=sk-...
+LITELLM_MODEL=gpt-4o-mini
+CORS_ORIGINS=*
+RATE_LIMIT=10
+
+Get keys from:
+- Cohere: https://dashboard.cohere.com/api-keys
+- Qdrant: https://cloud.qdrant.io
+- Neon: https://neon.tech
+- OpenAI: https://platform.openai.com/api-keys
+
+===========================================
+EXPECTED INGESTION OUTPUT:
+===========================================
+🚀 Starting book ingestion...
+📖 Read 9847 characters from book.txt
+✂️  Created 84 chunks
+🔢 Embedding chunks with Cohere embed-english-v3.0...
+✅ Generated 84 embeddings (dimension: 1024)
+📦 Creating collection 'robotics_textbook'...
+⬆️  Uploading to Qdrant...
+✅ Successfully ingested 84 chunks to Qdrant
+
+===========================================
+TROUBLESHOOTING:
+===========================================
+If "python not recognized": Use full path or add to PATH
+If Cohere warnings: Optional dependencies, ignore them
+If protobuf error: Already fixed with version 4.25.5
+If book.txt not found: File created in backend/ folder
+
+For full guide: See SETUP-GUIDE.md
