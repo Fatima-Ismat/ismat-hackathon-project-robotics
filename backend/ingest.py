@@ -82,15 +82,25 @@ def main():
     chunks = chunk_text(book_text, chunk_size=500, overlap=50)
     print(f"[*] Created {len(chunks)} chunks")
 
-    # Embed chunks with Cohere
+    # Embed chunks with Cohere (batched to respect API limits)
     print("[*] Embedding chunks with Cohere embed-english-v3.0...")
-    response = co.embed(
-        texts=chunks,
-        model="embed-english-v3.0",
-        input_type="search_document",
-        embedding_types=["float"]
-    )
-    embeddings = response.embeddings.float_
+    BATCH_SIZE = 96  # Cohere free tier limit
+    embeddings = []
+
+    for i in range(0, len(chunks), BATCH_SIZE):
+        batch = chunks[i:i + BATCH_SIZE]
+        batch_num = (i // BATCH_SIZE) + 1
+        total_batches = (len(chunks) + BATCH_SIZE - 1) // BATCH_SIZE
+        print(f"[*] Embedding batch {batch_num}/{total_batches} ({len(batch)} chunks)...")
+
+        response = co.embed(
+            texts=batch,
+            model="embed-english-v3.0",
+            input_type="search_document",
+            embedding_types=["float"]
+        )
+        embeddings.extend(response.embeddings.float_)
+
     print(f"[OK] Generated {len(embeddings)} embeddings (dimension: {len(embeddings[0])})")
 
     # Create collection if it doesn't exist
@@ -120,7 +130,7 @@ def main():
             print(f"[ERROR] Failed to create collection: {create_error}")
             return
 
-    # Upsert to Qdrant
+    # Upsert to Qdrant (batched to avoid timeouts)
     print("[*] Uploading to Qdrant...")
     points = [
         PointStruct(
@@ -135,10 +145,18 @@ def main():
         for i, (embedding, chunk) in enumerate(zip(embeddings, chunks))
     ]
 
-    qdrant.upsert(
-        collection_name=COLLECTION_NAME,
-        points=points
-    )
+    # Batch upload to avoid timeout
+    UPLOAD_BATCH_SIZE = 50
+    for i in range(0, len(points), UPLOAD_BATCH_SIZE):
+        batch_points = points[i:i + UPLOAD_BATCH_SIZE]
+        batch_num = (i // UPLOAD_BATCH_SIZE) + 1
+        total_batches = (len(points) + UPLOAD_BATCH_SIZE - 1) // UPLOAD_BATCH_SIZE
+        print(f"[*] Uploading batch {batch_num}/{total_batches} ({len(batch_points)} points)...")
+
+        qdrant.upsert(
+            collection_name=COLLECTION_NAME,
+            points=batch_points
+        )
 
     print(f"[OK] Successfully ingested {len(points)} chunks to Qdrant collection '{COLLECTION_NAME}'")
     print(f"[STATS] {sum(p.payload['word_count'] for p in points)} total words")

@@ -1,99 +1,2578 @@
-Physical AI & Humanoid Robotics: A Comprehensive Guide
+# Welcome to Physical AI & Humanoid Robotics
 
-Chapter 1: Introduction to Humanoid Robotics
+Embark on a comprehensive journey from digital AI to physical intelligence. This book bridges the gap between software-based artificial intelligence and embodied robotic systems that interact with the real world.
 
-Humanoid robots are autonomous machines designed to mimic human form and behavior. These sophisticated systems integrate multiple technologies including mechanical engineering, electronics, computer science, and artificial intelligence. The field of humanoid robotics has evolved significantly over the past few decades, moving from simple mechanical automata to highly sophisticated intelligent machines capable of complex interactions with humans and their environment.
+## What You'll Learn
 
-Key Components of Humanoid Robots
+This book provides a complete foundation in Physical AI and Humanoid Robotics:
 
-Humanoid robots typically consist of several essential components that work together to create lifelike movement and interaction. The structural framework provides the physical body, often made from lightweight yet durable materials such as aluminum alloys or advanced composites. Actuators, commonly servo motors, provide precise angular control for joint movements, enabling the robot to perform coordinated motions similar to human limbs.
+- **Chapter 1**: Introduction to Physical AI - Understanding embodied intelligence
+- **Chapter 2**: ROS 2 Fundamentals - Master the Robot Operating System
+- **Chapter 3**: Digital Twin Simulation - Build virtual environments
+- **Chapter 4**: NVIDIA Isaac Platform - Leverage GPU-accelerated robotics
+- **Chapter 5**: Vision-Language-Action Models - Multimodal AI for robotics
+- **Chapter 6**: Humanoid Robot Development - Build bipedal systems
+- **Chapter 7**: Conversational Robotics - Natural language interaction
+- **Chapter 8**: Capstone Project - Integrate everything you've learned
 
-Sensors form another critical component, including visual sensors (cameras), tactile sensors (touch), inertial measurement units (IMUs) for balance, and proximity sensors for obstacle detection. The control system, typically powered by embedded computers or microcontrollers, processes sensor data and executes movement commands in real-time.
+## Who This Book Is For
 
-Chapter 2: Kinematics and Motion Planning
+- Software engineers transitioning to robotics
+- AI researchers exploring embodied intelligence
+- Robotics students seeking practical knowledge
+- Developers building physical AI applications
 
-Forward and Inverse Kinematics
+## Prerequisites
 
-Kinematics is the study of motion without considering the forces that cause it. In robotics, forward kinematics involves calculating the position and orientation of the robot's end effector (such as a hand or tool) based on given joint angles. This calculation uses transformation matrices and the Denavit-Hartenberg (DH) convention to represent the spatial relationships between robot links.
+- Basic programming knowledge (Python preferred)
+- Understanding of fundamental AI/ML concepts
+- Familiarity with Linux command line
+- Curiosity about physical intelligence
 
-Inverse kinematics, conversely, determines the joint angles required to achieve a desired end effector position and orientation. This is typically more complex than forward kinematics and may have multiple solutions or no solution at all. Numerical methods such as the Jacobian inverse method or iterative algorithms are commonly used to solve inverse kinematics problems.
+## How to Use This Book
 
-Servo Motors and Actuator Control
+1. **Read sequentially** - Each chapter builds on previous concepts
+2. **Code along** - All examples are hands-on and practical
+3. **Ask questions** - Use the "Ask AI" feature for clarifications
+4. **Build projects** - Apply concepts through the capstone project
 
-Servo motors are the muscles of humanoid robots, providing precise angular control essential for coordinated movement. These motors integrate a DC motor, gear reduction system, position sensor (potentiometer or encoder), and control circuit. The control circuit continuously compares the desired position with the actual position and adjusts the motor speed and direction to minimize the error.
+Ready to begin? Let's start with [Chapter 1: Introduction to Physical AI](./chapter-01/index.md)!
 
-In humanoid robotics, high-torque digital servos are preferred for their precision and reliability. Pulse Width Modulation (PWM) signals control servo positions, with the pulse width determining the angular position. Modern servos can achieve positioning accuracy of 0.1 degrees or better, which is crucial for tasks requiring fine motor control.
+======================================================================
 
-Chapter 3: Balance and Locomotion
 
-Zero Moment Point (ZMP) Theory
 
-Balance is fundamental to bipedal locomotion. The Zero Moment Point (ZMP) is a concept used to ensure dynamic stability during walking. The ZMP is the point on the ground where the total moment of ground reaction forces equals zero. For stable walking, the ZMP must remain within the support polygon formed by the robot's feet in contact with the ground.
+======================================================================
+CHAPTER 1
+======================================================================
 
-ZMP-based control strategies involve planning the robot's center of mass trajectory to ensure the ZMP stays within stable regions throughout the gait cycle. This requires sophisticated control algorithms that coordinate multiple joints simultaneously while accounting for the robot's dynamics and external disturbances.
+# Chapter 1: Introduction to Physical AI
 
-Gait Generation and Walking Patterns
+## Overview
 
-Humanoid robot locomotion involves generating coordinated patterns of leg movements that maintain balance while achieving forward motion. Common gait patterns include static walking (where the center of mass always remains within the support polygon) and dynamic walking (which allows brief periods of instability for more natural, efficient movement).
+Physical AI represents a fundamental shift in how we think about artificial intelligence. While traditional AI operates purely in the digital realm—processing data, recognizing patterns, and making predictions—Physical AI extends these capabilities into the physical world through embodied systems like robots. This chapter explores the foundational concepts of Physical AI, its distinctions from digital AI, and why embodiment matters for intelligent systems.
 
-Modern gait generation methods use optimization techniques to minimize energy consumption while maintaining stability constraints. These algorithms consider factors such as step length, step frequency, foot clearance, and landing impact. Machine learning approaches, including reinforcement learning, are increasingly used to develop adaptive gait patterns that can handle uneven terrain and unexpected disturbances.
+**Learning Objectives:**
+- Understand what Physical AI is and how it differs from traditional AI
+- Learn about embodied intelligence and its importance
+- Explore real-world applications of Physical AI
+- Grasp the technical challenges unique to physical systems
 
-Chapter 4: Sensors and Perception
+---
 
-Vision Systems in Humanoid Robots
+## What is Physical AI?
 
-Vision is a primary sensory modality for humanoid robots, enabling object recognition, navigation, and human-robot interaction. Stereo camera systems provide depth perception by analyzing the disparity between images from two cameras positioned like human eyes. RGB-D cameras combine color imagery with depth information, simplifying 3D scene reconstruction.
+Physical AI refers to artificial intelligence systems that interact with and manipulate the physical world. Unlike software-only AI that processes information in isolation, Physical AI must:
 
-Computer vision algorithms process visual data to extract meaningful information. Object detection and recognition use convolutional neural networks (CNNs) trained on large datasets. Simultaneous Localization and Mapping (SLAM) algorithms enable robots to build maps of unknown environments while tracking their position within those maps. Visual servoing uses real-time visual feedback to guide robot movements, enabling tasks like object grasping and manipulation.
+1. **Perceive** the environment through sensors (cameras, LIDAR, tactile sensors)
+2. **Reason** about physical states, dynamics, and constraints
+3. **Act** through actuators (motors, grippers, wheels) to achieve goals
+4. **Learn** from real-world interactions and feedback
 
-Tactile and Force Sensing
+### The Embodiment Hypothesis
 
-Tactile sensors provide information about physical contact, pressure distribution, and texture. Common types include resistive sensors (which change resistance under pressure), capacitive sensors (which detect changes in capacitance), and piezoelectric sensors (which generate voltage when deformed).
+The **embodiment hypothesis** in cognitive science posits that intelligence is fundamentally shaped by the body's interaction with the environment. For AI systems, this means:
 
-Force-torque sensors measure the forces and moments applied at robot joints or end effectors. Six-axis force-torque sensors can measure three orthogonal forces and three moments, providing complete information about contact interactions. This data is crucial for safe human-robot interaction, compliant manipulation, and delicate assembly tasks.
+- **Sensorimotor coupling**: Perception and action are tightly integrated
+- **Environmental constraints**: Physical laws limit what's possible
+- **Real-time requirements**: Decisions must be made within milliseconds
+- **Learning through interaction**: Knowledge comes from doing, not just observing
 
-Chapter 5: Artificial Intelligence and Control
+Consider a robot learning to grasp objects. A purely digital AI might learn from millions of images, but a Physical AI must understand:
+- Object weight and balance
+- Gripper force and friction
+- Spatial relationships in 3D
+- Real-time feedback from tactile sensors
 
-Neural Networks for Robot Control
+---
 
-Deep learning has revolutionized robot control, enabling robots to learn complex behaviors from data rather than relying solely on programmed rules. Convolutional neural networks (CNNs) excel at processing visual data for tasks like object recognition and scene understanding. Recurrent neural networks (RNNs) and Long Short-Term Memory (LSTM) networks handle sequential data and temporal dependencies, useful for predicting motion trajectories and planning actions.
+## Physical AI vs. Digital AI
 
-Reinforcement learning allows robots to learn optimal control policies through trial and error. The robot receives rewards for desired behaviors and learns to maximize cumulative reward over time. Deep reinforcement learning combines neural networks with reinforcement learning, enabling robots to learn directly from high-dimensional sensory inputs like camera images.
+| Aspect | Digital AI | Physical AI |
+|--------|-----------|-------------|
+| **Environment** | Virtual (data, simulations) | Real world (physics, dynamics) |
+| **Feedback** | Immediate, perfect | Delayed, noisy, uncertain |
+| **Consequences** | Low (errors are cheap) | High (physical damage possible) |
+| **Training** | Millions of iterations | Limited by real-time constraints |
+| **Generalization** | Narrow to specific tasks | Must handle environmental variability |
 
-Real-Time Control Systems
+### Example: Image Classification vs. Object Manipulation
 
-Real-time control is essential for responsive robot behavior. Control systems must process sensor data and generate actuator commands within strict time constraints, typically operating at frequencies of 100 Hz or higher. Modern humanoid robots use hierarchical control architectures with multiple layers operating at different time scales.
+**Digital AI (Image Classification):**
+```python
+# Traditional computer vision - analyze pixels
+def classify_object(image):
+    features = extract_cnn_features(image)
+    label = classifier.predict(features)
+    return label  # "mug", "bottle", "cup"
+```
 
-Low-level control loops run at high frequencies (500-1000 Hz) to maintain joint positions and handle immediate stability requirements. Mid-level control (50-200 Hz) coordinates multiple joints for whole-body movements. High-level control (1-50 Hz) handles task planning, decision making, and human interaction. This hierarchical structure enables efficient resource utilization while maintaining responsive behavior.
+**Physical AI (Robotic Grasping):**
+```python
+# Physical AI - perceive, plan, and act
+def grasp_object(robot, camera, gripper):
+    # Perception: Where is the object?
+    depth_image = camera.get_depth()
+    object_pose = detect_object_pose(depth_image)
 
-Chapter 6: Human-Robot Interaction
+    # Reasoning: How to approach it?
+    grasp_plan = compute_grasp_pose(object_pose, gripper_geometry)
+    trajectory = plan_collision_free_path(robot.current_pose, grasp_plan)
 
-Speech Recognition and Natural Language Processing
+    # Action: Execute with feedback
+    robot.follow_trajectory(trajectory)
+    force_feedback = gripper.close(max_force=10.0)
 
-Speech interfaces enable natural communication between humans and robots. Automatic speech recognition (ASR) systems convert spoken language into text using deep neural networks trained on large speech corpora. Modern ASR systems achieve near-human accuracy in controlled environments.
+    # Adaptation: Did it work?
+    if force_feedback < threshold:
+        retry_with_adjusted_approach()
 
-Natural language processing (NLP) extracts meaning from text, enabling robots to understand commands, questions, and context. Large language models like GPT and BERT have dramatically improved NLP capabilities, allowing robots to engage in more natural, contextually appropriate conversations. Intent recognition determines the user's goal, while entity extraction identifies specific objects or actions mentioned in the conversation.
+    return success
+```
 
-Gesture Recognition and Body Language
+The Physical AI system must handle:
+- Uncertainty in object position (sensor noise)
+- Dynamic planning (path may be obstructed)
+- Real-time control (50-1000 Hz feedback loops)
+- Safety constraints (don't exceed force limits)
 
-Non-verbal communication is crucial for natural human-robot interaction. Gesture recognition systems use cameras and depth sensors to track human body movements and classify gestures. Skeleton tracking algorithms identify key body joints and model their spatial relationships over time.
+---
 
-Deep learning approaches, particularly 3D CNNs and graph neural networks, can recognize complex gestures and actions from video sequences. Robots can also generate their own gestures and body language, using programmed motion primitives combined with parameters adjusted based on context and emotional state. This bidirectional non-verbal communication makes interactions more intuitive and engaging.
+## Core Components of Physical AI Systems
 
-Chapter 7: Applications and Future Directions
+### 1. Perception Systems
 
-Current Applications of Humanoid Robots
+Physical AI relies on multiple sensor modalities to understand the world:
 
-Humanoid robots are deployed in various domains. In healthcare, robots assist with patient care, rehabilitation therapy, and elderly support. Service robots work in retail environments, hotels, and museums as guides and information providers. Educational robots teach programming, robotics, and STEM concepts in schools and universities.
+- **Vision**: RGB cameras, depth sensors (Intel RealSense, stereo cameras)
+- **LIDAR**: Laser-based distance measurement for mapping and localization
+- **Proprioception**: Joint encoders, IMUs (Inertial Measurement Units) for self-awareness
+- **Touch**: Force/torque sensors, tactile arrays for manipulation
 
-Industrial applications include inspection, maintenance in hazardous environments, and collaborative assembly tasks. Research platforms like Boston Dynamics' Atlas and Honda's ASIMO push the boundaries of humanoid robot capabilities, demonstrating advanced locomotion, manipulation, and autonomy.
+**Sensor Fusion Example:**
+```python
+# Combine multiple sensors for robust perception
+class MultiModalPerception:
+    def __init__(self):
+        self.camera = RGBDCamera()
+        self.lidar = LIDARSensor()
+        self.imu = IMUSensor()
 
-Future Challenges and Research Directions
+    def get_world_state(self):
+        # Visual features
+        rgb, depth = self.camera.capture()
+        objects = detect_objects(rgb, depth)
 
-Despite significant progress, humanoid robotics faces ongoing challenges. Energy efficiency remains a critical issue, as current battery technology limits operation time. Robust bipedal locomotion on varied terrain requires more sophisticated control algorithms and better mechanical designs.
+        # Spatial mapping
+        point_cloud = self.lidar.get_scan()
+        obstacles = extract_obstacles(point_cloud)
 
-Artificial general intelligence (AGI) is the ultimate goal, enabling robots to understand and learn new tasks with human-like flexibility. Advances in neuromorphic computing, which mimics biological neural networks, may provide more efficient and capable AI systems. Soft robotics and bio-inspired designs offer new approaches to creating safer, more adaptable robots.
+        # Robot state
+        orientation = self.imu.get_orientation()
+        velocity = self.imu.get_velocity()
 
-Ethical considerations around robot autonomy, privacy, and human labor displacement must be addressed as humanoid robots become more capable and widespread. Developing appropriate regulations and safety standards will be crucial for responsible deployment of humanoid robots in society.
+        # Fuse into coherent world model
+        world_state = {
+            'objects': objects,
+            'obstacles': obstacles,
+            'robot_pose': (orientation, velocity)
+        }
+        return world_state
+```
 
-This textbook provides a foundation for understanding the multidisciplinary field of humanoid robotics, from fundamental principles to cutting-edge applications and future directions.
+### 2. Planning and Decision Making
+
+Physical AI systems must plan actions that respect physical constraints:
+
+- **Motion planning**: Find collision-free paths (RRT, PRM algorithms)
+- **Task planning**: Sequence of high-level actions (PDDL, hierarchical planning)
+- **Trajectory optimization**: Smooth, dynamically feasible motions
+- **Real-time replanning**: Adapt when environment changes
+
+### 3. Control Systems
+
+Executing plans requires precise control:
+
+- **Low-level control**: PID controllers, torque control for joints
+- **Whole-body control**: Coordinate multiple actuators (inverse kinematics)
+- **Compliance control**: Regulate force/torque for safe interaction
+- **Learning-based control**: Neural network policies trained in simulation
+
+### 4. Learning and Adaptation
+
+Physical AI systems improve through experience:
+
+- **Imitation learning**: Learn from human demonstrations
+- **Reinforcement learning**: Trial-and-error in simulation, then real world
+- **Transfer learning**: Sim-to-real techniques to bridge the reality gap
+- **Online adaptation**: Adjust to new objects, terrains, or failures
+
+---
+
+## Real-World Applications
+
+### Manufacturing and Logistics
+
+- **Warehouse automation**: Amazon robots pick and pack millions of items
+- **Assembly lines**: Collaborative robots (cobots) work alongside humans
+- **Quality inspection**: Vision-guided robots detect defects
+
+### Healthcare
+
+- **Surgical robots**: Da Vinci system enables minimally invasive procedures
+- **Rehabilitation**: Exoskeletons help patients regain mobility
+- **Elder care**: Service robots assist with daily tasks
+
+### Autonomous Vehicles
+
+- **Self-driving cars**: Perception, planning, and control at highway speeds
+- **Delivery robots**: Navigate sidewalks and cross streets safely
+- **Drones**: Aerial inspection, delivery, and search-and-rescue
+
+### Humanoid Robots
+
+- **Service robots**: Pepper, NAO provide customer assistance
+- **Research platforms**: Atlas (Boston Dynamics) demonstrates advanced mobility
+- **Entertainment**: Sophia engages in conversational AI
+
+---
+
+## Technical Challenges
+
+### The Reality Gap
+
+Simulated environments don't perfectly match the real world:
+- Physics approximations (friction, contact dynamics)
+- Sensor noise and calibration errors
+- Unexpected environmental variations
+
+**Solution approaches:**
+- Domain randomization in simulation
+- Sim-to-real transfer with fine-tuning
+- Digital twin techniques (Chapter 3)
+
+### Safety and Reliability
+
+Physical AI systems can cause harm:
+- Collisions with humans or objects
+- Unpredictable behavior from learned policies
+- Failure modes in safety-critical scenarios
+
+**Mitigation strategies:**
+- Formal verification of control policies
+- Human-in-the-loop supervision
+- Redundant safety systems (emergency stops)
+
+### Scalability
+
+Training Physical AI is expensive:
+- Real-world data collection is slow (hours vs. millions of digital samples)
+- Hardware wear and tear from repeated experiments
+- Need for specialized facilities (testbeds, motion capture)
+
+**Approaches:**
+- Massively parallel simulation (NVIDIA Isaac Gym)
+- Self-supervised learning from unlabeled data
+- Transfer learning from pre-trained models
+
+---
+
+## The Path Forward
+
+Physical AI is rapidly evolving with advances in:
+
+1. **Compute power**: GPUs and TPUs accelerate simulation and training
+2. **Simulation platforms**: Photorealistic environments (Gazebo, Isaac Sim)
+3. **Foundation models**: Vision-Language-Action (VLA) models unify perception and control
+4. **Hardware**: Cheaper, more capable sensors and actuators
+
+**Key trends:**
+- **End-to-end learning**: Neural networks replacing hand-coded pipelines
+- **Multimodal AI**: Integrating vision, language, and action
+- **Sim-to-real mastery**: Closing the gap between virtual and physical
+- **General-purpose robots**: Systems that handle diverse tasks without retraining
+
+---
+
+## Summary
+
+Physical AI bridges the digital and physical worlds, enabling intelligent systems to perceive, reason, and act in real environments. Key takeaways:
+
+- **Embodiment matters**: Intelligence emerges from interaction with the world
+- **Physical constraints are fundamental**: Real-time, uncertainty, and safety
+- **Multiple disciplines converge**: Computer vision, control theory, ML, robotics
+- **Applications are transformative**: From healthcare to manufacturing
+
+In the next chapter, we'll dive into **ROS 2 Fundamentals**, the de facto framework for building Physical AI systems.
+
+---
+
+## Further Reading
+
+- Brooks, R. (1991). "Intelligence without representation" - Foundational paper on embodied AI
+- Moravec's Paradox: Why "easy" human tasks are hard for robots
+- OpenAI Robotics: Learning dexterous manipulation
+- Boston Dynamics: State-of-the-art legged locomotion
+
+## Exercises
+
+1. **Reflection**: List 3 everyday tasks that are easy for humans but hard for robots. Why?
+2. **Code**: Implement a simple sensor fusion algorithm combining two data sources
+3. **Research**: Find a recent Physical AI breakthrough (2023-2024) and summarize it
+4. **Design**: Sketch a Physical AI system for a specific task (e.g., fruit picking)
+
+---
+
+**Next Chapter:** [ROS 2 Fundamentals →](../chapter-02/index.md)
+
+======================================================================
+CHAPTER 2
+======================================================================
+
+# Chapter 2: ROS 2 Fundamentals
+
+## Overview
+
+The Robot Operating System 2 (ROS 2) is the de facto standard framework for building robotic systems. This chapter introduces ROS 2's core concepts, architecture, and practical usage for Physical AI development.
+
+**Learning Objectives:**
+- Understand ROS 2 architecture and design principles
+- Learn nodes, topics, services, and actions
+- Master ROS 2 command-line tools
+- Build your first ROS 2 application
+
+---
+
+## What is ROS 2?
+
+ROS 2 is a middleware framework providing:
+- **Communication infrastructure**: Publish-subscribe messaging, services, actions
+- **Tools**: Debugging, visualization, simulation integration
+- **Libraries**: Common robotics algorithms (SLAM, navigation, perception)
+- **Ecosystem**: Thousands of open-source packages
+
+### ROS 1 vs. ROS 2
+
+| Feature | ROS 1 | ROS 2 |
+|---------|-------|-------|
+| **Middleware** | Custom TCP/UDP | DDS (Data Distribution Service) |
+| **Real-time** | Limited | Full support |
+- **Security** | Basic | Encrypted communication |
+| **Multi-robot** | Difficult | Native support |
+| **Platforms** | Linux only | Linux, Windows, macOS |
+
+---
+
+## Core Concepts
+
+### Nodes
+
+A **node** is a single-purpose process:
+
+```python
+import rclpy
+from rclpy.node import Node
+
+class MinimalNode(Node):
+    def __init__(self):
+        super().__init__('minimal_node')
+        self.get_logger().info('Node initialized!')
+
+def main():
+    rclpy.init()
+    node = MinimalNode()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+```
+
+### Topics
+
+**Topics** enable publish-subscribe communication:
+
+```python
+from std_msgs.msg import String
+
+class Publisher(Node):
+    def __init__(self):
+        super().__init__('publisher')
+        self.publisher_ = self.create_publisher(String, 'chatter', 10)
+        self.timer = self.create_timer(0.5, self.timer_callback)
+
+    def timer_callback(self):
+        msg = String()
+        msg.data = 'Hello ROS 2!'
+        self.publisher_.publish(msg)
+```
+
+### Services
+
+**Services** provide request-response patterns:
+
+```python
+from example_interfaces.srv import AddTwoInts
+
+class ServiceNode(Node):
+    def __init__(self):
+        super().__init__('service_node')
+        self.srv = self.create_service(
+            AddTwoInts,
+            'add_two_ints',
+            self.add_two_ints_callback
+        )
+
+    def add_two_ints_callback(self, request, response):
+        response.sum = request.a + request.b
+        return response
+```
+
+---
+
+## DDS: The Middleware
+
+ROS 2 uses **DDS** (Data Distribution Service) for communication:
+
+- **Discovery**: Automatic peer finding (no roscore!)
+- **Quality of Service (QoS)**: Reliability, durability, history policies
+- **Security**: DDS-Security for encrypted communication
+
+### QoS Profiles
+
+```python
+from rclpy.qos import QoSProfile, ReliabilityPolicy
+
+qos_profile = QoSProfile(
+    reliability=ReliabilityPolicy.BEST_EFFORT,  # vs. RELIABLE
+    depth=10  # Message queue size
+)
+
+self.publisher_ = self.create_publisher(
+    LaserScan,
+    'scan',
+    qos_profile
+)
+```
+
+---
+
+## Workspace and Packages
+
+### Creating a Workspace
+
+```bash
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws/src
+
+# Create a package
+ros2 pkg create my_robot_pkg --build-type ament_python --dependencies rclpy
+
+cd ~/ros2_ws
+colcon build
+source install/setup.bash
+```
+
+### Package Structure
+
+```
+my_robot_pkg/
+├── package.xml          # Metadata and dependencies
+├── setup.py             # Python package configuration
+├── my_robot_pkg/
+│   ├── __init__.py
+│   └── my_node.py      # Your node implementation
+└── resource/
+    └── my_robot_pkg    # Marker file
+```
+
+---
+
+## Launch Files
+
+**Launch files** start multiple nodes:
+
+```python
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        Node(
+            package='my_robot_pkg',
+            executable='talker',
+            name='talker_node'
+        ),
+        Node(
+            package='my_robot_pkg',
+            executable='listener',
+            name='listener_node'
+        ),
+    ])
+```
+
+Run with:
+```bash
+ros2 launch my_robot_pkg my_launch.py
+```
+
+---
+
+## Command-Line Tools
+
+Essential ROS 2 CLI commands:
+
+```bash
+# List nodes
+ros2 node list
+
+# View node info
+ros2 node info /my_node
+
+# List topics
+ros2 topic list
+
+# Echo topic messages
+ros2 topic echo /chatter
+
+# Publish to topic
+ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.5}}"
+
+# Call a service
+ros2 service call /add_two_ints example_interfaces/srv/AddTwoInts "{a: 2, b: 3}"
+
+# View message definition
+ros2 interface show sensor_msgs/msg/LaserScan
+```
+
+---
+
+## Parameters
+
+**Parameters** configure nodes at runtime:
+
+```python
+class ParamNode(Node):
+    def __init__(self):
+        super().__init__('param_node')
+        self.declare_parameter('my_parameter', 'default_value')
+
+        # Get parameter
+        param_value = self.get_parameter('my_parameter').get_parameter_value().string_value
+        self.get_logger().info(f'Parameter: {param_value}')
+```
+
+Set parameters:
+```bash
+ros2 run my_pkg param_node --ros-args -p my_parameter:=new_value
+```
+
+---
+
+## Practical Example: Turtlesim
+
+Turtlesim is the "Hello World" of ROS 2:
+
+```bash
+# Terminal 1: Start turtlesim
+ros2 run turtlesim turtlesim_node
+
+# Terminal 2: Control with keyboard
+ros2 run turtlesim turtle_teleop_key
+
+# Terminal 3: Monitor velocity commands
+ros2 topic echo /turtle1/cmd_vel
+
+# Terminal 4: Draw a square
+ros2 service call /turtle1/teleport_absolute turtlesim/srv/TeleportAbsolute "{x: 5.0, y: 5.0, theta: 0.0}"
+```
+
+---
+
+## Summary
+
+ROS 2 provides:
+- **Modular architecture** via nodes and packages
+- **Flexible communication** with topics, services, actions
+- **Powerful tooling** for development and debugging
+- **Industry-grade middleware** (DDS) for reliability
+
+**Next Chapter:** [Digital Twin Simulation →](../chapter-03/index.md)
+
+---
+
+## Exercises
+
+1. Create a ROS 2 node that publishes sensor data
+2. Implement a service that processes robot commands
+3. Build a launch file for multi-node system
+4. Experiment with different QoS policies
+
+## Further Reading
+
+- ROS 2 Documentation: https://docs.ros.org/
+- DDS Specification: https://www.omg.org/spec/DDS/
+- ROS 2 Design: https://design.ros2.org/
+
+======================================================================
+CHAPTER 3
+======================================================================
+
+# Chapter 3: Digital Twin Simulation
+
+## Overview
+
+Digital twins are virtual replicas of physical systems that enable safe, scalable robot development. This chapter explores simulation platforms, physics engines, and sim-to-real transfer techniques.
+
+**Learning Objectives:**
+- Understand digital twin concepts
+- Master Gazebo simulator for ROS 2
+- Learn URDF robot modeling
+- Bridge the sim-to-real gap
+
+---
+
+## What is a Digital Twin?
+
+A **digital twin** is a virtual model that:
+- Mirrors physical system behavior
+- Enables testing without hardware risk
+- Accelerates development through parallelization
+- Facilitates data collection for machine learning
+
+### Benefits for Robotics
+
+1. **Safety**: Test dangerous scenarios (collisions, falls)
+2. **Speed**: Run 100x faster than real-time
+3. **Scalability**: Train multiple robots in parallel
+4. **Cost**: No hardware wear-and-tear
+
+---
+
+## Gazebo: The ROS 2 Simulator
+
+**Gazebo** integrates with ROS 2 for realistic simulation:
+
+```bash
+# Install Gazebo Fortress
+sudo apt install ros-humble-gazebo-ros-pkgs
+
+# Launch example world
+ros2 launch gazebo_ros gazebo.launch.py
+```
+
+### Key Features
+
+- **Physics engines**: ODE, Bullet, Simbody
+- **Sensor simulation**: Cameras, LIDAR, IMU
+- **Plugin system**: Custom robot behaviors
+- **ROS 2 integration**: Topics, services, TF
+
+---
+
+## URDF: Robot Description
+
+**URDF** (Unified Robot Description Format) defines robot geometry:
+
+```xml
+<?xml version="1.0"?>
+<robot name="my_robot">
+  <!-- Base link -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.5 0.3 0.2"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 0.8 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.5 0.3 0.2"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="10.0"/>
+      <inertia ixx="0.4" ixy="0" ixz="0" iyy="0.4" iyz="0" izz="0.2"/>
+    </inertial>
+  </link>
+
+  <!-- Wheel joint -->
+  <joint name="wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="wheel_link"/>
+    <origin xyz="0 0 -0.1" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="wheel_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.1" length="0.05"/>
+      </geometry>
+    </visual>
+  </link>
+</robot>
+```
+
+---
+
+## Spawning Robots in Gazebo
+
+```python
+import os
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    urdf_path = os.path.join(
+        get_package_share_directory('my_robot_description'),
+        'urdf',
+        'robot.urdf'
+    )
+
+    return LaunchDescription([
+        # Start Gazebo
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                get_package_share_directory('gazebo_ros'),
+                '/launch/gazebo.launch.py'
+            ])
+        ),
+
+        # Spawn robot
+        Node(
+            package='gazebo_ros',
+            executable='spawn_entity.py',
+            arguments=['-entity', 'my_robot', '-file', urdf_path],
+            output='screen'
+        ),
+    ])
+```
+
+---
+
+## Sensor Simulation
+
+### LIDAR
+
+```xml
+<gazebo reference="lidar_link">
+  <sensor name="lidar_sensor" type="gpu_lidar">
+    <update_rate>10</update_rate>
+    <lidar>
+      <scan>
+        <horizontal>
+          <samples>360</samples>
+          <resolution>1</resolution>
+          <min_angle>-3.14</min_angle>
+          <max_angle>3.14</max_angle>
+        </horizontal>
+      </scan>
+      <range>
+        <min>0.1</min>
+        <max>10.0</max>
+      </range>
+    </lidar>
+    <plugin name="lidar_plugin" filename="libgazebo_ros_ray_sensor.so">
+      <ros>
+        <namespace>/my_robot</namespace>
+        <remapping>~/out:=scan</remapping>
+      </ros>
+    </plugin>
+  </sensor>
+</gazebo>
+```
+
+### Camera
+
+```xml
+<gazebo reference="camera_link">
+  <sensor name="camera" type="camera">
+    <update_rate>30</update_rate>
+    <camera>
+      <horizontal_fov>1.57</horizontal_fov>
+      <image>
+        <width>640</width>
+        <height>480</height>
+      </image>
+    </camera>
+    <plugin name="camera_plugin" filename="libgazebo_ros_camera.so">
+      <ros>
+        <namespace>/my_robot</namespace>
+        <remapping>image_raw:=camera/image</remapping>
+      </ros>
+    </plugin>
+  </sensor>
+</gazebo>
+```
+
+---
+
+## Control in Simulation
+
+### Differential Drive
+
+```xml
+<gazebo>
+  <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
+    <ros>
+      <namespace>/my_robot</namespace>
+    </ros>
+    <left_joint>left_wheel_joint</left_joint>
+    <right_joint>right_wheel_joint</right_joint>
+    <wheel_separation>0.3</wheel_separation>
+    <wheel_diameter>0.2</wheel_diameter>
+    <max_wheel_torque>20</max_wheel_torque>
+    <command_topic>cmd_vel</command_topic>
+    <odometry_topic>odom</odometry_topic>
+    <publish_odom_tf>true</publish_odom_tf>
+  </plugin>
+</gazebo>
+```
+
+---
+
+## Sim-to-Real Transfer
+
+### Domain Randomization
+
+Vary simulation parameters to generalize:
+
+```python
+# Randomize physics properties
+mass = random.uniform(5.0, 15.0)
+friction = random.uniform(0.5, 1.5)
+damping = random.uniform(0.1, 0.5)
+
+# Randomize lighting
+light_intensity = random.uniform(0.5, 1.5)
+ambient_color = random_rgb()
+
+# Randomize textures
+floor_texture = random.choice(textures)
+```
+
+### System Identification
+
+Measure real-world parameters:
+
+```python
+# Calibrate inertial parameters
+def estimate_inertia(joint_torques, accelerations):
+    # Least squares fit: τ = I * α
+    I = np.linalg.lstsq(accelerations, joint_torques)[0]
+    return I
+
+# Update URDF
+update_urdf_inertia(robot_urdf, estimated_inertia)
+```
+
+---
+
+## Summary
+
+Digital twins enable:
+- **Safe experimentation** without hardware
+- **Parallel training** for machine learning
+- **Sensor simulation** for perception algorithms
+- **Physics-based testing** before deployment
+
+**Next Chapter:** [NVIDIA Isaac AI Platform →](../chapter-04/index.md)
+
+---
+
+## Exercises
+
+1. Create a URDF model of a simple robot
+2. Add sensors (camera, LIDAR) to your robot
+3. Implement a Gazebo plugin for custom behavior
+4. Compare simulated vs. real sensor data
+
+## Further Reading
+
+- Gazebo Documentation: https://gazebosim.org/
+- URDF Tutorial: http://wiki.ros.org/urdf/Tutorials
+- Sim-to-Real Research: Domain Randomization papers
+
+======================================================================
+CHAPTER 4
+======================================================================
+
+# Chapter 4: NVIDIA Isaac AI Platform
+
+## Overview
+
+NVIDIA Isaac is a GPU-accelerated platform for robotics simulation, training, and deployment. This chapter covers Isaac Sim, Isaac Gym, and deploying AI on NVIDIA Jetson hardware.
+
+**Learning Objectives:**
+- Understand Isaac platform architecture
+- Use Isaac Sim for photorealistic simulation
+- Train policies with Isaac Gym
+- Deploy models on Jetson edge devices
+
+---
+
+## Isaac Platform Components
+
+### Isaac Sim
+
+Photorealistic simulation built on NVIDIA Omniverse:
+- **RTX rendering**: Real-time ray tracing
+- **PhysX 5**: Accurate physics simulation
+- **Synthetic data**: Generate training datasets
+- **ROS 2 bridge**: Seamless integration
+
+### Isaac Gym
+
+Massively parallel reinforcement learning:
+- **Thousands of environments** in parallel
+- **GPU physics**: Faster than real-time
+- **End-to-end GPU pipeline**: No CPU bottleneck
+
+### Isaac SDK
+
+Modular robotics software framework:
+- **Perception**: Object detection, segmentation
+- **Navigation**: Path planning, obstacle avoidance
+- **Manipulation**: Grasp planning, pick-and-place
+
+---
+
+## Getting Started with Isaac Sim
+
+### Installation
+
+```bash
+# Download from NVIDIA
+# https://developer.nvidia.com/isaac-sim
+
+# Launch Isaac Sim
+./isaac-sim.sh
+```
+
+### Creating a Scene
+
+```python
+from omni.isaac.kit import SimulationApp
+simulation_app = SimulationApp({"headless": False})
+
+from omni.isaac.core import World
+from omni.isaac.core.objects import DynamicCuboid
+
+# Create world
+world = World()
+world.scene.add_default_ground_plane()
+
+# Add object
+cube = world.scene.add(
+    DynamicCuboid(
+        prim_path="/World/Cube",
+        name="my_cube",
+        position=[0, 0, 0.5],
+        size=0.1,
+        color=[1.0, 0.0, 0.0]
+    )
+)
+
+# Run simulation
+world.reset()
+for i in range(1000):
+    world.step(render=True)
+
+simulation_app.close()
+```
+
+---
+
+## ROS 2 Integration
+
+### Publishing Joint States
+
+```python
+from omni.isaac.core.utils.extensions import enable_extension
+enable_extension("omni.isaac.ros2_bridge")
+
+# Enable ROS 2 bridge
+import omni.graph.core as og
+
+keys = og.Controller.Keys
+(graph, nodes, _, _) = og.Controller.edit(
+    {"graph_path": "/ActionGraph", "evaluator_name": "execution"},
+    {
+        keys.CREATE_NODES: [
+            ("OnPlaybackTick", "omni.graph.action.OnPlaybackTick"),
+            ("PublishJointState", "omni.isaac.ros2_bridge.ROS2PublishJointState"),
+        ],
+        keys.CONNECT: [
+            ("OnPlaybackTick.outputs:tick", "PublishJointState.inputs:execIn"),
+        ],
+    },
+)
+```
+
+---
+
+## Isaac Gym: Parallel Training
+
+### Training Loop
+
+```python
+from isaacgym import gymapi
+from isaacgym import gymtorch
+
+# Create gym
+gym = gymapi.acquire_gym()
+
+# Configure sim
+sim_params = gymapi.SimParams()
+sim_params.use_gpu_pipeline = True
+sim = gym.create_sim(0, 0, gymapi.SIM_PHYSX, sim_params)
+
+# Create 4096 environments in parallel
+num_envs = 4096
+envs = []
+for i in range(num_envs):
+    env = gym.create_env(sim, lower, upper, num_per_row)
+    envs.append(env)
+
+# Training loop (runs on GPU)
+while not done:
+    # Get observations (all envs)
+    obs = gym.acquire_dof_state_tensor(sim)
+
+    # Compute actions (neural network on GPU)
+    actions = policy(obs)
+
+    # Step all envs in parallel
+    gym.set_dof_velocity_target_tensor(sim, actions)
+    gym.simulate(sim)
+    gym.fetch_results(sim, True)
+```
+
+---
+
+## Synthetic Data Generation
+
+### Domain Randomization
+
+```python
+from omni.isaac.synthetic_utils import SyntheticDataHelper
+
+# Initialize helper
+sd_helper = SyntheticDataHelper()
+
+# Randomize lighting
+for light in scene.lights:
+    intensity = random.uniform(500, 2000)
+    light.GetIntensityAttr().Set(intensity)
+
+# Randomize textures
+for mesh in scene.meshes:
+    texture = random.choice(texture_library)
+    mesh.apply_texture(texture)
+
+# Randomize object poses
+for obj in scene.objects:
+    x = random.uniform(-1.0, 1.0)
+    y = random.uniform(-1.0, 1.0)
+    obj.set_world_pose([x, y, 0.5])
+
+# Render and export
+rgb = sd_helper.get_rgb()
+depth = sd_helper.get_depth()
+bbox = sd_helper.get_bounding_box_2d()
+```
+
+---
+
+## Deploying to Jetson
+
+### Model Optimization with TensorRT
+
+```python
+import tensorrt as trt
+
+# Convert PyTorch model to ONNX
+torch.onnx.export(
+    model,
+    dummy_input,
+    "model.onnx",
+    opset_version=11
+)
+
+# Build TensorRT engine
+logger = trt.Logger(trt.Logger.WARNING)
+builder = trt.Builder(logger)
+network = builder.create_network()
+parser = trt.OnnxParser(network, logger)
+
+with open("model.onnx", "rb") as f:
+    parser.parse(f.read())
+
+# Optimize for Jetson
+config = builder.create_builder_config()
+config.set_memory_pool_limit(trt.MemoryPoolType.WORKSPACE, 1 << 30)  # 1GB
+config.set_flag(trt.BuilderFlag.FP16)  # Use FP16 precision
+
+# Build and save
+engine = builder.build_serialized_network(network, config)
+with open("model.trt", "wb") as f:
+    f.write(engine)
+```
+
+### Inference on Jetson
+
+```python
+import pycuda.driver as cuda
+import pycuda.autoinit
+
+# Load TensorRT engine
+with open("model.trt", "rb") as f:
+    engine = trt.Runtime(logger).deserialize_cuda_engine(f.read())
+
+context = engine.create_execution_context()
+
+# Allocate GPU memory
+d_input = cuda.mem_alloc(input_size)
+d_output = cuda.mem_alloc(output_size)
+
+# Inference loop
+while True:
+    # Copy input to GPU
+    cuda.memcpy_htod(d_input, input_data)
+
+    # Execute
+    context.execute_v2([int(d_input), int(d_output)])
+
+    # Copy output from GPU
+    cuda.memcpy_dtoh(output_data, d_output)
+```
+
+---
+
+## Summary
+
+NVIDIA Isaac platform enables:
+- **Photorealistic simulation** with Isaac Sim
+- **Massively parallel training** with Isaac Gym
+- **Edge deployment** on Jetson hardware
+- **Synthetic data generation** for vision models
+
+**Next Chapter:** [Vision-Language-Action Models →](../chapter-05/index.md)
+
+---
+
+## Exercises
+
+1. Create a custom scene in Isaac Sim
+2. Train a RL policy in Isaac Gym
+3. Generate synthetic training data
+4. Deploy a model to Jetson with TensorRT
+
+## Further Reading
+
+- Isaac Sim Documentation: https://docs.omniverse.nvidia.com/isaacsim/
+- Isaac Gym Paper: arXiv:2108.10470
+- TensorRT Developer Guide: https://docs.nvidia.com/deeplearning/tensorrt/
+
+======================================================================
+CHAPTER 5
+======================================================================
+
+# Chapter 5: Vision-Language-Action (VLA) Models
+
+## Overview
+
+Vision-Language-Action (VLA) models represent the convergence of computer vision, natural language processing, and robot control. These foundation models enable robots to understand multimodal instructions and execute complex tasks.
+
+**Learning Objectives:**
+- Understand VLA model architecture
+- Learn about RT-1, RT-2, and similar models
+- Implement vision-language grounding
+- Fine-tune VLAs for specific tasks
+
+---
+
+## What are VLA Models?
+
+**VLA models** map visual observations and language instructions directly to robot actions:
+
+```
+Input: Image + "Pick up the red cube"
+Output: [gripper_x, gripper_y, gripper_z, gripper_open]
+```
+
+### Key Capabilities
+
+1. **Generalization**: Zero-shot transfer to new objects
+2. **Language grounding**: Understand spatial relationships
+3. **Common sense reasoning**: Leverage pre-trained knowledge
+4. **Multi-task learning**: Single model for diverse tasks
+
+---
+
+## RT-1: Robotics Transformer
+
+### Architecture
+
+```python
+# Simplified RT-1 architecture
+class RT1(nn.Module):
+    def __init__(self):
+        super().__init__()
+        # Vision encoder (EfficientNet-B3)
+        self.vision_encoder = EfficientNet.from_pretrained('b3')
+
+        # Language encoder (Universal Sentence Encoder)
+        self.language_encoder = hub.load("USE")
+
+        # Transformer policy
+        self.transformer = nn.TransformerEncoder(
+            nn.TransformerEncoderLayer(d_model=512, nhead=8),
+            num_layers=8
+        )
+
+        # Action head
+        self.action_head = nn.Linear(512, 7)  # 6 DOF + gripper
+
+    def forward(self, image, text):
+        # Encode vision
+        vision_features = self.vision_encoder(image)  # [B, 512, H, W]
+        vision_tokens = vision_features.flatten(2).permute(0, 2, 1)  # [B, HW, 512]
+
+        # Encode language
+        text_features = self.language_encoder(text)  # [B, 512]
+        text_token = text_features.unsqueeze(1)  # [B, 1, 512]
+
+        # Concatenate
+        tokens = torch.cat([text_token, vision_tokens], dim=1)  # [B, 1+HW, 512]
+
+        # Transform
+        policy_features = self.transformer(tokens)
+
+        # Predict action
+        action = self.action_head(policy_features[:, 0, :])  # Use CLS token
+        return action
+```
+
+### Training Data
+
+RT-1 was trained on **130k robot demonstrations**:
+- 700+ tasks
+- 17 physical robots
+- Real-world kitchen environments
+
+---
+
+## RT-2: Vision-Language-Action via VLM
+
+### Leveraging VLMs
+
+RT-2 builds on **Vision-Language Models** (PaLM-E, Flamingo):
+
+```python
+class RT2(nn.Module):
+    def __init__(self, vlm_model):
+        super().__init__()
+        # Pre-trained VLM (e.g., PaLM-E)
+        self.vlm = vlm_model
+        self.vlm.freeze_vision_encoder()  # Keep vision frozen
+
+        # Fine-tune language model for action prediction
+        self.action_tokenizer = ActionTokenizer(bins=256)
+
+    def forward(self, image, instruction):
+        # VLM processes both modalities
+        output_tokens = self.vlm.generate(
+            image=image,
+            prompt=f"Robot action for: {instruction}"
+        )
+
+        # Decode action from tokens
+        action = self.action_tokenizer.decode(output_tokens)
+        return action
+```
+
+### Key Insight
+
+VLMs provide:
+- **World knowledge** from internet-scale pre-training
+- **Semantic understanding** of objects and scenes
+- **Reasoning capabilities** for novel situations
+
+---
+
+## Language Grounding for Robotics
+
+### Spatial Relationships
+
+```python
+class SpatialGrounding:
+    def __init__(self, vision_model, nlp_model):
+        self.vision = vision_model
+        self.nlp = nlp_model
+
+    def ground_instruction(self, image, instruction):
+        # Parse instruction
+        parsed = self.nlp.parse(instruction)
+        # "put the red block on the blue plate"
+        # → {action: "put", object: "red block", location: "blue plate"}
+
+        # Detect objects
+        detections = self.vision.detect(image)
+
+        # Find target object
+        target = self.find_object(detections, "red block")
+
+        # Find location
+        location = self.find_object(detections, "blue plate")
+
+        # Compute action
+        return {
+            'pick_pose': target.pose,
+            'place_pose': location.pose + [0, 0, 0.1]  # Above plate
+        }
+```
+
+---
+
+## Open-Source VLA Models
+
+### OpenVLA
+
+```bash
+# Install OpenVLA
+pip install openvla
+
+# Load pre-trained model
+from openvla import OpenVLA
+
+model = OpenVLA.from_pretrained("openvla-7b")
+
+# Inference
+action = model.predict(
+    image=camera.capture(),
+    instruction="Pick up the apple"
+)
+
+robot.execute(action)
+```
+
+### CLIP for Vision-Language
+
+```python
+import clip
+
+model, preprocess = clip.load("ViT-B/32")
+
+# Encode image
+image_input = preprocess(image).unsqueeze(0)
+image_features = model.encode_image(image_input)
+
+# Encode text options
+text_inputs = clip.tokenize([
+    "a photo of a red cube",
+    "a photo of a blue ball",
+    "a photo of a green cylinder"
+])
+text_features = model.encode_text(text_inputs)
+
+# Compute similarity
+similarity = (image_features @ text_features.T).softmax(dim=-1)
+most_similar = similarity.argmax()
+```
+
+---
+
+## Fine-Tuning for Your Robot
+
+### Data Collection
+
+```python
+class DemonstrationCollector:
+    def __init__(self, robot, camera):
+        self.robot = robot
+        self.camera = camera
+        self.demonstrations = []
+
+    def collect(self, instruction):
+        print(f"Demonstrate: {instruction}")
+        trajectory = []
+
+        while not done:
+            # Record state
+            state = {
+                'image': self.camera.capture(),
+                'instruction': instruction,
+                'action': self.robot.get_current_action(),
+                'gripper_open': self.robot.gripper.is_open()
+            }
+            trajectory.append(state)
+
+            time.sleep(0.1)
+
+        self.demonstrations.append(trajectory)
+```
+
+### Fine-Tuning
+
+```python
+from transformers import Trainer, TrainingArguments
+
+# Prepare dataset
+dataset = VLADataset(demonstrations)
+
+# Training config
+training_args = TrainingArguments(
+    output_dir="./vla-finetuned",
+    num_train_epochs=10,
+    per_device_train_batch_size=8,
+    learning_rate=1e-5,
+    warmup_steps=500,
+)
+
+# Fine-tune
+trainer = Trainer(
+    model=vla_model,
+    args=training_args,
+    train_dataset=dataset,
+)
+
+trainer.train()
+```
+
+---
+
+## Challenges and Solutions
+
+### Distribution Shift
+
+**Problem**: Pre-trained on internet images, deployed on robot cameras
+
+**Solutions**:
+- Domain adaptation techniques
+- Fine-tune vision encoder on robot data
+- Synthetic data augmentation
+
+### Action Space Mismatch
+
+**Problem**: Different robots have different DOF
+
+**Solution**: Action tokenization
+```python
+# Universal action representation
+action_tokens = [
+    "move_left", "move_right", "move_up", "move_down",
+    "rotate_cw", "rotate_ccw", "gripper_open", "gripper_close"
+]
+
+# Map to robot-specific actions
+robot_action = action_mapper[action_token](robot_state)
+```
+
+---
+
+## Summary
+
+VLA models enable:
+- **Natural language control** of robots
+- **Zero-shot generalization** to new tasks
+- **Leveraging foundation models** for common sense
+- **Unified architecture** across diverse robots
+
+**Next Chapter:** [Humanoid Robot Development →](../chapter-06/index.md)
+
+---
+
+## Exercises
+
+1. Implement CLIP for object detection
+2. Collect and label robot demonstrations
+3. Fine-tune a VLA model on custom task
+4. Compare RT-1 vs. RT-2 architectures
+
+## Further Reading
+
+- RT-1 Paper: arXiv:2212.06817
+- RT-2 Paper: arXiv:2307.15818
+- OpenVLA: https://openvla.github.io/
+- CLIP: https://github.com/openai/CLIP
+
+======================================================================
+CHAPTER 6
+======================================================================
+
+# Chapter 6: Humanoid Robot Development
+
+## Overview
+
+Humanoid robots combine bipedal locomotion, dexterous manipulation, and human-like interaction. This chapter covers the unique challenges of humanoid systems and modern development approaches.
+
+**Learning Objectives:**
+- Understand humanoid robot kinematics
+- Learn bipedal locomotion control
+- Master whole-body motion planning
+- Explore modern humanoid platforms
+
+---
+
+## Why Humanoid Robots?
+
+Humanoid form factor enables:
+1. **Human environments**: Navigate stairs, doorways, furniture
+2. **Tool use**: Operate devices designed for humans
+3. **Social interaction**: Natural communication and collaboration
+4. **Versatility**: General-purpose capabilities
+
+---
+
+## Humanoid Kinematics
+
+### Degrees of Freedom
+
+Typical humanoid DOF:
+- **Legs**: 6 DOF each (hip 3, knee 1, ankle 2)
+- **Arms**: 7 DOF each (shoulder 3, elbow 1, wrist 3)
+- **Torso**: 3 DOF (pitch, roll, yaw)
+- **Head**: 2-3 DOF (pan, tilt)
+- **Hands**: 12+ DOF (fingers)
+
+**Total**: 40-50 DOF
+
+### Forward Kinematics
+
+```python
+import numpy as np
+from scipy.spatial.transform import Rotation
+
+class HumanoidKinematics:
+    def __init__(self, urdf_path):
+        self.robot = load_urdf(urdf_path)
+        self.joint_names = self.robot.get_joint_names()
+
+    def forward_kinematics(self, joint_angles):
+        """Compute end-effector poses from joint angles"""
+        poses = {}
+
+        # Right hand
+        poses['right_hand'] = self.robot.link_fk(
+            joint_angles,
+            link='right_hand_link'
+        )
+
+        # Left hand
+        poses['left_hand'] = self.robot.link_fk(
+            joint_angles,
+            link='left_hand_link'
+        )
+
+        # Center of mass
+        poses['com'] = self.robot.center_of_mass(joint_angles)
+
+        return poses
+```
+
+### Inverse Kinematics
+
+```python
+from scipy.optimize import minimize
+
+def inverse_kinematics(self, target_pose, initial_guess):
+    """Find joint angles to reach target pose"""
+
+    def cost_function(joint_angles):
+        current_pose = self.forward_kinematics(joint_angles)['right_hand']
+        position_error = np.linalg.norm(current_pose[:3] - target_pose[:3])
+        orientation_error = rotation_distance(current_pose[3:], target_pose[3:])
+        return position_error + 0.5 * orientation_error
+
+    result = minimize(
+        cost_function,
+        initial_guess,
+        bounds=self.joint_limits,
+        method='SLSQP'
+    )
+
+    return result.x
+```
+
+---
+
+## Bipedal Locomotion
+
+### Zero Moment Point (ZMP)
+
+**ZMP** must stay within support polygon for stability:
+
+```python
+class ZMPController:
+    def __init__(self, robot):
+        self.robot = robot
+        self.g = 9.81  # gravity
+
+    def compute_zmp(self, com_position, com_acceleration):
+        """Compute ZMP position"""
+        z_com = com_position[2]
+        zmp_x = com_position[0] - (z_com / self.g) * com_acceleration[0]
+        zmp_y = com_position[1] - (z_com / self.g) * com_acceleration[1]
+        return np.array([zmp_x, zmp_y, 0])
+
+    def is_stable(self, zmp, support_polygon):
+        """Check if ZMP is within support polygon"""
+        return point_in_polygon(zmp[:2], support_polygon)
+```
+
+### Walking Gait Generation
+
+```python
+class WalkingController:
+    def __init__(self):
+        self.step_length = 0.3  # meters
+        self.step_duration = 0.8  # seconds
+
+    def generate_footstep_plan(self, target_position):
+        """Plan sequence of footsteps"""
+        footsteps = []
+        current_pos = np.array([0, 0])
+
+        while np.linalg.norm(current_pos - target_position) > 0.1:
+            # Alternate feet
+            if len(footsteps) % 2 == 0:
+                step = current_pos + [self.step_length, 0.1]  # Right foot
+            else:
+                step = current_pos + [self.step_length, -0.1]  # Left foot
+
+            footsteps.append(step)
+            current_pos = step
+
+        return footsteps
+
+    def execute_step(self, foot, target_position):
+        """Swing foot to target"""
+        # Generate cubic spline trajectory
+        t = np.linspace(0, self.step_duration, 100)
+        trajectory = []
+
+        for time in t:
+            # Swing phase: lift foot, move forward, set down
+            height = 0.05 * np.sin(np.pi * time / self.step_duration)
+            position = interpolate(foot.position, target_position, time / self.step_duration)
+            position[2] += height
+
+            trajectory.append(position)
+
+        return trajectory
+```
+
+---
+
+## Whole-Body Control
+
+### Task-Space Control
+
+```python
+class WholeBodyController:
+    def __init__(self, robot):
+        self.robot = robot
+
+    def compute_joint_torques(self, tasks, constraints):
+        """
+        Solve: min ||J*q_dot - v_desired||^2
+        Subject to: balance constraints
+        """
+        # Jacobian matrices for each task
+        J_hand = self.robot.jacobian('right_hand')
+        J_com = self.robot.com_jacobian()
+
+        # Stack tasks
+        J = np.vstack([J_hand, J_com])
+        v_des = np.hstack([tasks['hand_velocity'], tasks['com_velocity']])
+
+        # Solve QP
+        q_dot = np.linalg.lstsq(J, v_des)[0]
+
+        # Compute torques
+        M = self.robot.mass_matrix()
+        C = self.robot.coriolis_matrix()
+        tau = M @ q_dot + C
+
+        return tau
+```
+
+---
+
+## Modern Humanoid Platforms
+
+### Figure 01
+
+- **Height**: 1.73m, 60 kg
+- **Battery**: 2.25 kWh (5 hours)
+- **Hands**: 16 DOF dexterous grippers
+- **AI**: VLA models for task execution
+
+### Tesla Optimus
+
+- **Actuators**: Custom linear actuators
+- **Vision**: 8 cameras, no LIDAR
+- **Training**: Sim-to-real with Isaac Gym
+- **Cost target**: < $20,000
+
+### Boston Dynamics Atlas
+
+- **Mobility**: Parkour, backflips
+- **Hydraulic**: High power-to-weight ratio
+- **Perception**: Stereo vision + LIDAR
+- **Research platform**
+
+---
+
+## Hands and Manipulation
+
+### Dexterous Grippers
+
+```python
+class DexterousHand:
+    def __init__(self):
+        self.fingers = 5
+        self.dof_per_finger = 3
+        self.tactile_sensors = []
+
+    def grasp(self, object_shape):
+        """Plan grasp based on object geometry"""
+        if object_shape == "sphere":
+            return self.power_grasp()
+        elif object_shape == "cylinder":
+            return self.precision_grasp()
+        else:
+            return self.adaptive_grasp(object_shape)
+
+    def power_grasp(self):
+        """All fingers curl around object"""
+        angles = {
+            'thumb': [45, 45, 0],
+            'index': [60, 60, 60],
+            'middle': [60, 60, 60],
+            'ring': [60, 60, 60],
+            'pinky': [60, 60, 60]
+        }
+        return angles
+
+    def precision_grasp(self):
+        """Fingertip grasp for small objects"""
+        angles = {
+            'thumb': [90, 0, 0],
+            'index': [0, 90, 0],
+            'middle': [0, 0, 0],
+            'ring': [0, 0, 0],
+            'pinky': [0, 0, 0]
+        }
+        return angles
+```
+
+---
+
+## Sim-to-Real for Humanoids
+
+### Domain Randomization
+
+```python
+# Randomize physics
+params = {
+    'joint_friction': random.uniform(0.01, 0.1),
+    'motor_strength': random.uniform(0.8, 1.2),
+    'link_mass': random.uniform(0.9, 1.1) * nominal_mass,
+    'ground_friction': random.uniform(0.5, 1.5),
+}
+
+# Randomize perception
+lighting = random.uniform(0.3, 1.5)
+camera_noise = random.normal(0, 0.05)
+```
+
+### Teleoperation for Data Collection
+
+```python
+class HumanoidTeleoperation:
+    def __init__(self, vr_system, robot):
+        self.vr = vr_system
+        self.robot = robot
+
+    def map_human_to_robot(self, human_pose):
+        """Retarget human motion to robot"""
+        # Scale to robot dimensions
+        scale = self.robot.height / self.vr.user_height
+
+        robot_joint_angles = {}
+        for joint in self.robot.joints:
+            human_joint = self.vr.get_joint_angle(joint.name)
+            robot_joint_angles[joint.name] = self.retarget(human_joint, scale)
+
+        return robot_joint_angles
+```
+
+---
+
+## Summary
+
+Humanoid robots require:
+- **Complex kinematics** (40+ DOF)
+- **Balance control** via ZMP and whole-body optimization
+- **Bipedal locomotion** with footstep planning
+- **Dexterous manipulation** for human tools
+- **Sim-to-real transfer** for scalable learning
+
+**Next Chapter:** [Conversational Robotics →](../chapter-07/index.md)
+
+---
+
+## Exercises
+
+1. Implement forward kinematics for a 7-DOF arm
+2. Create a ZMP controller for static balance
+3. Generate a walking gait for flat terrain
+4. Design a grasp planner for different object shapes
+
+## Further Reading
+
+- ZMP Control: Kajita et al., "Biped Walking Pattern Generation"
+- Atlas Robot: Boston Dynamics Technical Reports
+- Humanoid AI: Tesla AI Day presentations
+
+======================================================================
+CHAPTER 7
+======================================================================
+
+# Chapter 7: Conversational Robotics
+
+## Overview
+
+Conversational AI enables robots to understand natural language, engage in dialogue, and respond intelligently. This chapter covers speech recognition, language understanding, and dialogue management for robotics.
+
+**Learning Objectives:**
+- Implement speech recognition and synthesis
+- Integrate large language models (LLMs)
+- Build dialogue systems for robots
+- Handle multimodal interactions
+
+---
+
+## Speech-to-Text
+
+### Using Whisper
+
+```python
+import whisper
+
+model = whisper.load_model("base")
+
+def transcribe_audio(audio_file):
+    result = model.transcribe(audio_file)
+    return result["text"]
+
+# Real-time streaming
+import pyaudio
+import numpy as np
+
+def listen_continuous():
+    p = pyaudio.PyAudio()
+    stream = p.open(format=pyaudio.paInt16,
+                    channels=1,
+                    rate=16000,
+                    input=True,
+                    frames_per_buffer=1024)
+
+    while True:
+        audio_chunk = stream.read(1024)
+        audio_np = np.frombuffer(audio_chunk, dtype=np.int16)
+
+        # Transcribe chunk
+        text = model.transcribe(audio_np)
+
+        if text:
+            yield text
+```
+
+---
+
+## Text-to-Speech
+
+### Using Coqui TTS
+
+```python
+from TTS.api import TTS
+
+tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC")
+
+def speak(text):
+    tts.tts_to_file(text=text, file_path="output.wav")
+    play_audio("output.wav")
+
+# Real-time synthesis
+def speak_stream(text_generator):
+    for sentence in text_generator:
+        speak(sentence)
+```
+
+---
+
+## Large Language Models for Robotics
+
+### Integrating LLMs
+
+```python
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+class RobotLLM:
+    def __init__(self):
+        self.tokenizer = AutoTokenizer.from_pretrained("gpt2")
+        self.model = AutoModelForCausalLM.from_pretrained("gpt2")
+
+    def generate_response(self, user_input, context=""):
+        prompt = f"{context}\nHuman: {user_input}\nRobot:"
+
+        inputs = self.tokenizer(prompt, return_tensors="pt")
+        outputs = self.model.generate(
+            inputs.input_ids,
+            max_length=150,
+            temperature=0.7,
+            top_p=0.9,
+        )
+
+        response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+        return response.split("Robot:")[-1].strip()
+```
+
+### Task Planning from Language
+
+```python
+class LanguageToAction:
+    def __init__(self, llm):
+        self.llm = llm
+
+    def parse_instruction(self, instruction):
+        prompt = f"""
+Convert the following instruction into a sequence of robot actions.
+Available actions: move_to(location), pick(object), place(object, location), open(container), close(container)
+
+Instruction: {instruction}
+
+Action sequence (JSON):
+"""
+
+        response = self.llm.generate(prompt)
+        actions = json.loads(response)
+        return actions
+
+# Example
+instruction = "Get me a coffee from the kitchen"
+actions = parser.parse_instruction(instruction)
+# [
+#   {"action": "move_to", "args": ["kitchen"]},
+#   {"action": "pick", "args": ["coffee_mug"]},
+#   {"action": "move_to", "args": ["coffee_machine"]},
+#   ...
+# ]
+```
+
+---
+
+## Dialogue Management
+
+### Finite State Machine
+
+```python
+class DialogueManager:
+    def __init__(self):
+        self.state = "idle"
+        self.context = {}
+
+    def process_input(self, user_input):
+        if self.state == "idle":
+            if "hello" in user_input.lower():
+                self.state = "greeting"
+                return "Hello! How can I help you?"
+
+        elif self.state == "greeting":
+            if "bring" in user_input.lower():
+                self.state = "fetch_task"
+                self.context['object'] = self.extract_object(user_input)
+                return f"I'll bring you the {self.context['object']}"
+
+        elif self.state == "fetch_task":
+            # Execute task
+            success = self.execute_fetch(self.context['object'])
+            if success:
+                self.state = "idle"
+                return "Here you go!"
+            else:
+                return "Sorry, I couldn't find it"
+
+        return "I don't understand"
+```
+
+### Intent Recognition
+
+```python
+from transformers import pipeline
+
+class IntentClassifier:
+    def __init__(self):
+        self.classifier = pipeline(
+            "zero-shot-classification",
+            model="facebook/bart-large-mnli"
+        )
+
+        self.intents = [
+            "bring_object",
+            "answer_question",
+            "navigate_to",
+            "greeting",
+            "farewell"
+        ]
+
+    def classify(self, utterance):
+        result = self.classifier(utterance, self.intents)
+        return result['labels'][0], result['scores'][0]
+
+# Example
+intent, confidence = classifier.classify("Can you bring me water?")
+# ("bring_object", 0.95)
+```
+
+---
+
+## Multimodal Understanding
+
+### Vision + Language
+
+```python
+class MultimodalRobot:
+    def __init__(self, vision_model, llm):
+        self.vision = vision_model
+        self.llm = llm
+
+    def process_instruction(self, image, text):
+        # Describe what robot sees
+        image_caption = self.vision.caption(image)
+
+        # Objects in scene
+        objects = self.vision.detect_objects(image)
+        objects_list = ", ".join([obj.label for obj in objects])
+
+        # Build context
+        context = f"""
+You are a robot assistant. You can see: {image_caption}
+Objects visible: {objects_list}
+"""
+
+        # Generate response
+        response = self.llm.generate_response(text, context=context)
+
+        return response
+
+# Example
+image = camera.capture()
+instruction = "Pick up the red block"
+
+response = robot.process_instruction(image, instruction)
+# "I see a red block on the table. I'll pick it up now."
+```
+
+---
+
+## Emotion and Personality
+
+### Sentiment Analysis
+
+```python
+from transformers import pipeline
+
+sentiment_analyzer = pipeline("sentiment-analysis")
+
+def adjust_response_tone(text, user_sentiment):
+    if user_sentiment == "NEGATIVE":
+        return f"I'm sorry. {text}"
+    elif user_sentiment == "POSITIVE":
+        return f"Great! {text}"
+    else:
+        return text
+
+user_input = "This is frustrating!"
+sentiment = sentiment_analyzer(user_input)[0]
+# {"label": "NEGATIVE", "score": 0.98}
+
+response = "I'll try to help"
+adjusted = adjust_response_tone(response, sentiment['label'])
+# "I'm sorry. I'll try to help"
+```
+
+---
+
+## Safety and Ethics
+
+### Content Filtering
+
+```python
+class SafetyFilter:
+    def __init__(self):
+        self.unsafe_patterns = [
+            "hurt", "harm", "attack", "weapon"
+        ]
+
+    def is_safe(self, text):
+        text_lower = text.lower()
+        for pattern in self.unsafe_patterns:
+            if pattern in text_lower:
+                return False
+        return True
+
+    def filter_response(self, response):
+        if not self.is_safe(response):
+            return "I can't help with that request"
+        return response
+```
+
+---
+
+## ROS 2 Integration
+
+### Speech Node
+
+```python
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+
+class SpeechNode(Node):
+    def __init__(self):
+        super().__init__('speech_node')
+
+        # Publishers
+        self.transcript_pub = self.create_publisher(String, 'speech/transcript', 10)
+
+        # Subscribers
+        self.tts_sub = self.create_subscription(
+            String,
+            'speech/synthesize',
+            self.speak_callback,
+            10
+        )
+
+        # Speech recognizer
+        self.recognizer = whisper.load_model("base")
+
+    def listen(self):
+        audio = self.capture_audio()
+        text = self.recognizer.transcribe(audio)["text"]
+
+        msg = String()
+        msg.data = text
+        self.transcript_pub.publish(msg)
+
+    def speak_callback(self, msg):
+        speak(msg.data)
+```
+
+---
+
+## Summary
+
+Conversational robotics enables:
+- **Natural interaction** via speech
+- **Task understanding** with LLMs
+- **Context-aware responses** through dialogue management
+- **Multimodal integration** of vision and language
+
+**Next Chapter:** [Capstone Project →](../chapter-08/index.md)
+
+---
+
+## Exercises
+
+1. Implement a voice-controlled robot interface
+2. Create an intent classifier for robot commands
+3. Build a dialogue system with state management
+4. Integrate vision with language understanding
+
+## Further Reading
+
+- Whisper Paper: arXiv:2212.04356
+- LLMs for Robotics: SayCan, Code as Policies
+- Dialogue Systems: Rasa Framework
+
+======================================================================
+CHAPTER 8
+======================================================================
+
+# Chapter 8: Capstone Project
+
+## Overview
+
+In this final chapter, you'll integrate everything learned to build a complete Physical AI system: a conversational humanoid robot that performs household tasks using vision-language-action models.
+
+**Project Goals:**
+- Build end-to-end Physical AI system
+- Integrate ROS 2, simulation, and AI models
+- Deploy to real or simulated humanoid robot
+- Demonstrate learned concepts
+
+---
+
+## Project Specification
+
+### System Requirements
+
+**Capabilities:**
+1. **Visual perception**: Detect and recognize objects
+2. **Natural language understanding**: Parse verbal commands
+3. **Task planning**: Decompose high-level goals
+4. **Manipulation**: Pick and place objects
+5. **Navigation**: Move between locations
+6. **Dialogue**: Confirm actions and report status
+
+**Example Interaction:**
+```
+Human: "Can you bring me the red mug from the kitchen?"
+Robot: [Visual scan] "I see a red mug on the kitchen counter. I'll bring it to you."
+Robot: [Navigates to kitchen, grasps mug, returns]
+Robot: "Here's your red mug."
+```
+
+---
+
+## Architecture
+
+### System Diagram
+
+```
+┌─────────────────────────────────────────────┐
+│              User Interface                  │
+│         (Speech + Text Commands)             │
+└────────────────┬────────────────────────────┘
+                 │
+┌────────────────▼────────────────────────────┐
+│          Dialogue Manager                    │
+│    (Intent Recognition + State Tracking)     │
+└────────────────┬────────────────────────────┘
+                 │
+┌────────────────▼────────────────────────────┐
+│          Task Planner (LLM)                  │
+│    (Natural Language → Action Sequence)      │
+└────────────────┬────────────────────────────┘
+                 │
+         ┌───────┴───────┐
+         │               │
+┌────────▼─────┐  ┌──────▼────────┐
+│   Perception  │  │  Navigation   │
+│  (VLA Model)  │  │  (ROS 2 Nav)  │
+└────────┬──────┘  └──────┬────────┘
+         │                │
+         └────────┬───────┘
+                  │
+         ┌────────▼─────────┐
+         │  Motion Control   │
+         │  (Whole-Body IK)  │
+         └────────┬──────────┘
+                  │
+         ┌────────▼─────────┐
+         │  Robot Hardware   │
+         │  (Isaac Sim/Real) │
+         └───────────────────┘
+```
+
+---
+
+## Implementation Steps
+
+### Step 1: Setup Simulation Environment
+
+```bash
+# Create workspace
+mkdir -p ~/capstone_ws/src
+cd ~/capstone_ws/src
+
+# Clone robot description
+git clone https://github.com/YOUR_USERNAME/household_robot_description
+
+# Build
+cd ~/capstone_ws
+colcon build
+source install/setup.bash
+
+# Launch Isaac Sim
+./isaac-sim.sh
+```
+
+### Step 2: Create Robot Package
+
+```python
+# ~/capstone_ws/src/household_robot/robot_controller.py
+
+import rclpy
+from rclpy.node import Node
+from geometry_msgs.msg import Twist, PoseStamped
+from sensor_msgs.msg import Image, JointState
+from std_msgs.msg import String
+
+class HouseholdRobotController(Node):
+    def __init__(self):
+        super().__init__('household_robot_controller')
+
+        # Publishers
+        self.cmd_vel_pub = self.create_publisher(Twist, 'cmd_vel', 10)
+        self.arm_cmd_pub = self.create_publisher(JointState, 'arm/command', 10)
+
+        # Subscribers
+        self.camera_sub = self.create_subscription(
+            Image, 'camera/image_raw', self.camera_callback, 10
+        )
+        self.voice_sub = self.create_subscription(
+            String, 'speech/transcript', self.voice_callback, 10
+        )
+
+        # Initialize components
+        self.perception = VLAPerception()
+        self.planner = TaskPlanner()
+        self.dialogue = DialogueManager()
+
+    def voice_callback(self, msg):
+        user_input = msg.data
+        self.get_logger().info(f'Heard: {user_input}')
+
+        # Process command
+        self.process_command(user_input)
+```
+
+### Step 3: Integrate VLA Model
+
+```python
+from openvla import OpenVLA
+
+class VLAPerception:
+    def __init__(self):
+        self.model = OpenVLA.from_pretrained("openvla-7b")
+
+    def detect_objects(self, image):
+        # Use VLA for object detection
+        result = self.model.detect(
+            image=image,
+            prompt="Detect all objects in the scene"
+        )
+        return result.objects
+
+    def grasp_object(self, image, object_name):
+        # Generate grasp action
+        action = self.model.predict(
+            image=image,
+            instruction=f"Pick up the {object_name}"
+        )
+        return action
+```
+
+### Step 4: Implement Task Planning
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+class TaskPlanner:
+    def __init__(self):
+        self.llm = AutoModelForCausalLM.from_pretrained("gpt2")
+        self.tokenizer = AutoTokenizer.from_pretrained("gpt2")
+
+    def plan_task(self, instruction, scene_description):
+        prompt = f"""
+You are a household robot assistant. Given the instruction and scene, create a step-by-step plan.
+
+Scene: {scene_description}
+Instruction: {instruction}
+
+Plan (JSON format with steps):
+"""
+
+        inputs = self.tokenizer(prompt, return_tensors="pt")
+        outputs = self.llm.generate(inputs.input_ids, max_length=200)
+        plan = self.tokenizer.decode(outputs[0])
+
+        return self.parse_plan(plan)
+
+    def parse_plan(self, plan_text):
+        # Parse LLM output into actionable steps
+        steps = []
+        for line in plan_text.split('\n'):
+            if line.strip().startswith('-'):
+                steps.append(self.parse_step(line))
+        return steps
+```
+
+### Step 5: Navigation Integration
+
+```python
+from nav2_simple_commander.robot_navigator import BasicNavigator
+
+class NavigationController:
+    def __init__(self):
+        self.navigator = BasicNavigator()
+
+        # Define known locations
+        self.locations = {
+            'kitchen': PoseStamped(...),
+            'living_room': PoseStamped(...),
+            'bedroom': PoseStamped(...),
+        }
+
+    def navigate_to(self, location_name):
+        if location_name in self.locations:
+            goal_pose = self.locations[location_name]
+            self.navigator.goToPose(goal_pose)
+
+            while not self.navigator.isTaskComplete():
+                feedback = self.navigator.getFeedback()
+                # Monitor progress
+
+            return self.navigator.getResult()
+```
+
+### Step 6: Complete Integration
+
+```python
+class HouseholdRobotSystem:
+    def __init__(self):
+        self.perception = VLAPerception()
+        self.planner = TaskPlanner()
+        self.navigator = NavigationController()
+        self.dialogue = DialogueManager()
+        self.speech = SpeechInterface()
+
+    def execute_command(self, user_input):
+        # 1. Parse intent
+        intent = self.dialogue.classify_intent(user_input)
+
+        # 2. Get current scene
+        image = self.get_camera_image()
+        objects = self.perception.detect_objects(image)
+        scene_desc = self.describe_scene(objects)
+
+        # 3. Plan task
+        plan = self.planner.plan_task(user_input, scene_desc)
+
+        # 4. Confirm with user
+        confirmation = self.dialogue.confirm_plan(plan)
+        self.speech.speak(confirmation)
+
+        # 5. Execute plan
+        for step in plan:
+            if step['type'] == 'navigate':
+                self.navigator.navigate_to(step['location'])
+            elif step['type'] == 'grasp':
+                action = self.perception.grasp_object(image, step['object'])
+                self.execute_action(action)
+            elif step['type'] == 'place':
+                self.place_object(step['location'])
+
+        # 6. Report completion
+        self.speech.speak("Task completed!")
+```
+
+---
+
+## Testing and Validation
+
+### Test Scenarios
+
+1. **Object Fetch**
+   ```
+   Command: "Bring me the blue book"
+   Expected: Robot navigates, grasps book, returns
+   ```
+
+2. **Multi-Step Task**
+   ```
+   Command: "Clear the table and put items in the drawer"
+   Expected: Pick each item, navigate to drawer, place
+   ```
+
+3. **Clarification**
+   ```
+   Command: "Get the cup"
+   Robot: "I see two cups. Which one - the red cup or white cup?"
+   ```
+
+---
+
+## Deployment Options
+
+### Option 1: Isaac Sim (Recommended)
+
+- Fastest iteration
+- GPU-accelerated physics
+- Photorealistic rendering
+- No hardware required
+
+### Option 2: Gazebo + Real Robot
+
+- Lower fidelity simulation
+- Transfer to real hardware
+- Standard ROS 2 pipeline
+
+### Option 3: Real Humanoid Robot
+
+- Ultimate validation
+- Requires access to hardware (Unitree, Agility Robotics)
+- Sim-to-real fine-tuning needed
+
+---
+
+## Extensions and Challenges
+
+### Advanced Features
+
+1. **Multi-Robot Collaboration**: Coordinate 2+ robots
+2. **Long-Horizon Planning**: Multi-day task scheduling
+3. **Learning from Mistakes**: RL for failure recovery
+4. **Human Preference Alignment**: RLHF for behavior
+5. **Privacy-Preserving Vision**: On-device processing
+
+### Performance Metrics
+
+- **Task Success Rate**: % of completed requests
+- **Execution Time**: Seconds per task
+- **Safety**: Collisions, unsafe actions
+- **User Satisfaction**: Survey responses
+
+---
+
+## Summary
+
+This capstone project demonstrates:
+- **End-to-end system integration**
+- **Real-world applicability**
+- **Modern AI techniques** (VLAs, LLMs)
+- **Robotics fundamentals** (ROS 2, kinematics)
+
+You've now built a complete Physical AI system - congratulations!
+
+---
+
+## Final Deliverables
+
+1. **System demonstration video** (3-5 minutes)
+2. **Code repository** with README
+3. **Technical report** documenting design choices
+4. **Performance evaluation** with metrics
+
+## Next Steps
+
+- Deploy to real hardware
+- Publish research paper
+- Open-source contributions
+- Join robotics community
+
+**Congratulations on completing the book!** 🎉
+
+---
+
+## Further Resources
+
+- Open Robotics: https://www.openrobotics.org/
+- arXiv Robotics: https://arxiv.org/list/cs.RO/recent
+- Physical AI Community: Discord/Slack channels
