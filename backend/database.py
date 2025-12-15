@@ -13,6 +13,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 from sqlalchemy.orm import declarative_base
 from dotenv import load_dotenv
 import logging
+from typing import AsyncGenerator
 
 # Load .env file from the same directory as this file
 # This ensures .env is ALWAYS found regardless of working directory
@@ -112,7 +113,7 @@ async def init_db():
         raise
 
 
-async def get_session() -> AsyncSession:
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
     """
     Dependency for getting async database session.
 

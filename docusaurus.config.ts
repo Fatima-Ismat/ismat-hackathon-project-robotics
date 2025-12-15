@@ -29,7 +29,7 @@ const config: Config = {
   customFields: {
     ragBackendUrl: process.env.NODE_ENV === 'production'
       ? 'https://physical-ai-book-api.onrender.com'
-      : 'http://localhost:8000',
+      : 'ismat-hackathon-project-robotics-production.up.railway.app',
     authorName: 'Ismat Fatima',
   },
 

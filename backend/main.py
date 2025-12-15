@@ -5,6 +5,7 @@ Follows OpenAI Constitution: Helpful, Honest, Harmless.
 """
 import os
 import logging
+import json
 from contextlib import asynccontextmanager
 from typing import Optional
 from pathlib import Path
@@ -87,22 +88,24 @@ async def health_check():
     return HealthResponse(status="healthy", version="1.0.0")
 
 @app.post("/chat")
-# @limiter.limit(f"{RATE_LIMIT}/minute")
 async def chat_endpoint(
     request_obj: Request,
     chat_request: ChatRequest,
     db: AsyncSession = Depends(get_session),
 ):
     """
-    Main chat endpoint with streaming support using LiteLLM.
+    Main chat endpoint with SSE streaming.
+
+    Streams response as Server-Sent Events with format:
+    data: {"reply": "text chunk"}
 
     Args:
-        request_obj: FastAPI request object (for rate limiting)
+        request_obj: FastAPI request object
         chat_request: ChatRequest with message, selected_text, session_id, language
         db: Database session
 
     Returns:
-        StreamingResponse: SSE stream of agent response with performance headers
+        StreamingResponse: SSE stream with Content-Type: text/event-stream
     """
     import time
 
@@ -122,7 +125,7 @@ async def chat_endpoint(
             selected_text=chat_request.selected_text
         )
 
-        # Retrieve relevant chunks (with performance timing)
+        # Retrieve relevant chunks
         retrieval_result = retrieve_chunks(
             query=chat_request.message,
             selected_text=chat_request.selected_text,
@@ -171,7 +174,7 @@ BOOK CONTENT:
 
         # Stream response generator
         async def generate_response():
-            """Generate SSE stream from LiteLLM with performance tracking."""
+            """Generate SSE stream with JSON format: data: {"reply": "chunk"}"""
             nonlocal llm_start_time, llm_time
 
             try:
@@ -193,10 +196,12 @@ BOOK CONTENT:
                         if hasattr(delta, 'content') and delta.content:
                             content = delta.content
                             full_response += content
-                            yield f"data: {content}\n\n"
+                            # ✅ FIXED: Send JSON format expected by frontend
+                            json_chunk = json.dumps({"reply": content})
+                            yield f"data: {json_chunk}\n\n"
 
                 # Calculate LLM time
-                llm_time = int((time.time() - llm_start_time) * 1000)  # ms
+                llm_time = int((time.time() - llm_start_time) * 1000)
 
                 # Save assistant response with language preference
                 await save_message(
@@ -208,13 +213,11 @@ BOOK CONTENT:
                 )
 
                 logger.info(f"Response completed - Embedding: {embedding_time}ms, Search: {search_time}ms, LLM: {llm_time}ms")
-                yield "data: [DONE]\n\n"
 
             except Exception as e:
                 logger.error(f"Error generating response: {e}", exc_info=True)
-                error_msg = "I encountered an error. Please try again."
-                yield f"data: {error_msg}\n\n"
-                yield "data: [DONE]\n\n"
+                error_json = json.dumps({"reply": "Error: Could not connect to AI backend."})
+                yield f"data: {error_json}\n\n"
 
         return StreamingResponse(
             generate_response(),
@@ -286,6 +289,7 @@ async def chat_ui():
             div.textContent = content;
             messages.appendChild(div);
             messages.scrollTop = messages.scrollHeight;
+            return div;
         }
 
         async function sendMessage() {
@@ -300,7 +304,7 @@ async def chat_ui():
                 const response = await fetch('/chat', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({message, selected_text: '', session_id: sessionId})
+                    body: JSON.stringify({message, selected_text: '', session_id: sessionId, language: 'en'})
                 });
 
                 const reader = response.body.getReader();
@@ -317,18 +321,21 @@ async def chat_ui():
 
                     for (const line of lines) {
                         if (line.startsWith('data: ')) {
-                            const data = line.substring(6);
-                            if (data === '[DONE]') break;
-                            if (!data) continue;
-
-                            assistantMsg += data;
-                            if (!msgDiv) {
-                                msgDiv = document.createElement('div');
-                                msgDiv.className = 'message assistant';
-                                messages.appendChild(msgDiv);
+                            try {
+                                const jsonStr = line.substring(6).trim();
+                                if (!jsonStr) continue;
+                                const data = JSON.parse(jsonStr);
+                                if (data.reply) {
+                                    assistantMsg += data.reply;
+                                    if (!msgDiv) {
+                                        msgDiv = addMessage('assistant', '');
+                                    }
+                                    msgDiv.textContent = assistantMsg;
+                                    messages.scrollTop = messages.scrollHeight;
+                                }
+                            } catch (e) {
+                                console.error('JSON parse error:', e);
                             }
-                            msgDiv.textContent = assistantMsg;
-                            messages.scrollTop = messages.scrollHeight;
                         }
                     }
                 }

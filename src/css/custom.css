@@ -52,3 +52,36 @@
   box-shadow: var(--glass-shadow);
   border-radius: 10px;
 }
+
+/* Language-based content visibility */
+[data-language="Urdu"] {
+  direction: rtl;
+}
+
+[data-language="English"] [lang="ur"],
+[data-language="English"] [lang="roman-ur"] {
+  display: none;
+}
+
+[data-language="Urdu"] [lang="en"],
+[data-language="Urdu"] [lang="roman-ur"] {
+  display: none;
+}
+
+[data-language="Roman Urdu"] [lang="en"],
+[data-language="Roman Urdu"] [lang="ur"] {
+  display: none;
+}
+
+/* Show language-specific content */
+[data-language="English"] [lang="en"] {
+  display: block;
+}
+
+[data-language="Urdu"] [lang="ur"] {
+  display: block;
+}
+
+[data-language="Roman Urdu"] [lang="roman-ur"] {
+  display: block;
+}

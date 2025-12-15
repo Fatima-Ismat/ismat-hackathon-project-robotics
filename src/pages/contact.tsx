@@ -1,13 +1,13 @@
 /**
  * Contact Page - Get in touch with the author and join the waitlist
  */
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from 'react';
 import Layout from '@theme/Layout';
 import ContactForm from '@site/src/components/ContactForm';
 import styles from './contact.module.css';
 
-export default function Contact(): JSX.Element {
+export default function Contact(): React.JSX.Element {
   return (
     <Layout
       title="Contact"

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './styles.module.css';
 
-export default function ProgressIndicator(): JSX.Element {
+export default function ProgressIndicator(): React.JSX.Element {
   const [scrollPercentage, setScrollPercentage] = useState(0);
 
   useEffect(() => {
