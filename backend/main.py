@@ -97,8 +97,8 @@ async def chat_endpoint(
     try:
         logger.info(f"Chat request from session {chat_request.session_id} (language: {chat_request.language})")
 
-        # ✅ Reduce history to last 3 messages to avoid token limit
-        history = await load_history(chat_request.session_id, db, limit=3)
+        # ✅ Reduce history to last 2 messages to avoid token limit
+        history = await load_history(chat_request.session_id, db, limit=2)
 
         await save_message(
             session_id=chat_request.session_id,
@@ -109,11 +109,11 @@ async def chat_endpoint(
             selected_text=chat_request.selected_text
         )
 
-        # ✅ Reduce retrieved chunks to top 3
+        # ✅ Reduce retrieved chunks to top 2
         retrieval_result = retrieve_chunks(
             query=chat_request.message,
             selected_text=chat_request.selected_text,
-            limit=3
+            limit=2
         )
 
         context = retrieval_result["context"]
@@ -157,7 +157,7 @@ BOOK CONTENT:
                     model=LITELLM_MODEL,
                     messages=messages,
                     stream=True,
-                    max_tokens=2000,
+                    max_tokens=1200,  # ✅ Reduce max_tokens to prevent RateLimit
                     temperature=0.7
                 )
                 for chunk in response:
