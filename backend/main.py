@@ -1,7 +1,7 @@
 # backend/main.py
 """
 Production RAG Chatbot Backend using LiteLLM + OpenAI SDK.
-Follows OpenAI Constitution: Helpful, Honest, Harmless.
+Handles Groq token limits safely.
 """
 import os
 import logging
@@ -9,7 +9,7 @@ import json
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-# Load .env FIRST before any other imports
+# Load .env FIRST
 from dotenv import load_dotenv
 ENV_PATH = Path(__file__).parent / ".env"
 load_dotenv(dotenv_path=ENV_PATH, override=True)
@@ -27,7 +27,7 @@ from database import init_db, get_session, save_message, load_history
 from schemas import ChatRequest, HealthResponse
 from agent import retrieve_chunks
 
-# Configure logging
+# Logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -35,7 +35,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Validate required environment variables
-REQUIRED_ENV_VARS = ["COHERE_API_KEY", "QDRANT_URL", "DATABASE_URL"]
+REQUIRED_ENV_VARS = ["COHERE_API_KEY", "QDRANT_URL", "DATABASE_URL", "GROQ_API_KEY"]
 for var in REQUIRED_ENV_VARS:
     if not os.getenv(var):
         raise ValueError(f"Missing required environment variable: {var}")
@@ -46,11 +46,9 @@ os.environ["GROQ_API_KEY"] = os.getenv("GROQ_API_KEY", "")
 
 # Rate limiter
 limiter = Limiter(key_func=get_remote_address)
-RATE_LIMIT = os.getenv("RATE_LIMIT", "10")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Application lifespan manager."""
     logger.info("Starting RAG chatbot backend...")
     await init_db()
     logger.info("Database initialized")
@@ -71,10 +69,8 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # CORS
 CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*")
-logger.info(f"CORS origins configured: {CORS_ORIGINS}")
 origins = [origin.strip() for origin in CORS_ORIGINS.split(",")]
-origins.append("http://localhost:3000")  # For dev/testing
-
+origins.append("http://localhost:3000")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -97,9 +93,8 @@ async def chat_endpoint(
     try:
         logger.info(f"Chat request from session {chat_request.session_id} (language: {chat_request.language})")
 
-        # ✅ Reduce history to last 2 messages to avoid token limit
+        # Reduce history & chunks to prevent Groq limit
         history = await load_history(chat_request.session_id, db, limit=2)
-
         await save_message(
             session_id=chat_request.session_id,
             role="user",
@@ -109,7 +104,6 @@ async def chat_endpoint(
             selected_text=chat_request.selected_text
         )
 
-        # ✅ Reduce retrieved chunks to top 2
         retrieval_result = retrieve_chunks(
             query=chat_request.message,
             selected_text=chat_request.selected_text,
@@ -145,19 +139,15 @@ BOOK CONTENT:
             messages.append({"role": msg["role"], "content": msg["content"]})
         messages.append({"role": "user", "content": chat_request.message})
 
-        llm_start_time = None
-        llm_time = 0
-
         async def generate_response():
-            nonlocal llm_start_time, llm_time
+            full_response = ""
+            llm_start_time = time.time()
             try:
-                full_response = ""
-                llm_start_time = time.time()
                 response = completion(
                     model=LITELLM_MODEL,
                     messages=messages,
                     stream=True,
-                    max_tokens=1200,  # ✅ Reduce max_tokens to prevent RateLimit
+                    max_tokens=1200,  # Safe max tokens
                     temperature=0.7
                 )
                 for chunk in response:
@@ -166,8 +156,7 @@ BOOK CONTENT:
                         if hasattr(delta, 'content') and delta.content:
                             content = delta.content
                             full_response += content
-                            json_chunk = json.dumps({"reply": content})
-                            yield f"data: {json_chunk}\n\n"
+                            yield f"data: {json.dumps({'reply': content})}\n\n"
 
                 llm_time = int((time.time() - llm_start_time) * 1000)
                 await save_message(
@@ -180,8 +169,7 @@ BOOK CONTENT:
                 logger.info(f"Response completed - Embedding: {embedding_time}ms, Search: {search_time}ms, LLM: {llm_time}ms")
             except Exception as e:
                 logger.error(f"Error generating response: {e}", exc_info=True)
-                error_json = json.dumps({"reply": "Error: Could not connect to AI backend."})
-                yield f"data: {error_json}\n\n"
+                yield f"data: {json.dumps({'reply': 'Error: Could not connect to AI backend.'})}\n\n"
 
         return StreamingResponse(
             generate_response(),
@@ -195,13 +183,14 @@ BOOK CONTENT:
                 "X-Chunks-Retrieved": str(chunks_count),
             }
         )
+
     except Exception as e:
         logger.error(f"Chat endpoint error: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to process chat request")
 
 @app.get("/chat-ui", response_class=HTMLResponse)
 async def chat_ui():
-    html = "<!-- Your existing HTML for testing -->"
+    html = "<!-- Simple chat UI placeholder -->"
     return HTMLResponse(content=html)
 
 if __name__ == "__main__":

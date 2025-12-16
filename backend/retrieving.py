@@ -1,11 +1,24 @@
+import os
 import cohere
 from qdrant_client import QdrantClient
+from dotenv import load_dotenv
+from pathlib import Path
 
-cohere_client = cohere.Client("nxXj9Nat4kh5hmsrWmLv0igdyWa8g1mD5LgiCnT5")
+# Load .env
+ENV_PATH = Path(__file__).parent / ".env"
+load_dotenv(dotenv_path=ENV_PATH, override=True)
+
+# Get keys from environment
+COHERE_API_KEY = os.getenv("COHERE_API_KEY")
+QDRANT_URL = os.getenv("QDRANT_URL")
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+
+# Initialize clients
+cohere_client = cohere.Client(COHERE_API_KEY)
 
 qdrant = QdrantClient(
-    url="https://1136ec4a-56aa-4c6e-aa74-8c47b4fb146c.europe-west3-0.gcp.cloud.qdrant.io:6333",
-    api_key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.-RH52ZBpCXWrQiXkG3R79Rue5T_PFVcJFIJPDKx-WQs"
+    url=QDRANT_URL,
+    api_key=QDRANT_API_KEY
 )
 
 def get_embedding(text):
@@ -27,5 +40,6 @@ def retrieve(query):
     return [point.payload["text"] for point in result.points]
 
 
-
-print(retrieve("What data do you have"))
+# Example usage
+if __name__ == "__main__":
+    print(retrieve("What data do you have"))
