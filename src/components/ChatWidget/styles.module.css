@@ -276,7 +276,7 @@
     height: 40px;
     font-size: 12px;
   }
-}
+} /* ✅ YEH MISSING CURLY BRACE ADD KI HAI */
 
 @media (max-width: 480px) {
   .chatHeader {
