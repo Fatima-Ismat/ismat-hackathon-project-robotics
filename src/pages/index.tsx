@@ -6,6 +6,7 @@ import Layout from '@theme/Layout';
 import Heading from '@theme/Heading';
 import ChatWidget from '@site/src/components/ChatWidget';
 import TestButton from '@site/src/components/TestButton';
+import SimpleChatWidget from '@site/src/components/SimpleChatWidget';
 
 import styles from './index.module.css';
 
@@ -113,11 +114,15 @@ export default function Home(): ReactNode {
         </section>
       </main>
 
-      {/* ✅ FLOATING CHATWIDGET BUTTON */}
-      <ChatWidget />
+      {/* 💬 SIMPLE CHATWIDGET - Blue, positioned higher (100px from bottom) */}
+      <SimpleChatWidget />
 
-      {/* 🧪 TEST BUTTON - Red with yellow border (should be VERY visible) */}
+      {/* 🧪 TEST BUTTON - Red with yellow border (20px from bottom) */}
       <TestButton />
+
+      {/* ⚠️ COMPLEX CHATWIDGET - Currently disabled for debugging
+      <ChatWidget />
+      */}
     </Layout>
   );
 }
