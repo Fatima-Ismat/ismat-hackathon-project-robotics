@@ -13,7 +13,32 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
-    "railway:start": "NODE_OPTIONS='--max-old-space-size=512' docusaurus serve"
+    
+   
+    "hf:login": "huggingface-cli login",
+    "hf:push": "cd ../Rag-chatbot-space && git add . && git commit -m \"Backend update\" && git push origin main",
+    "hf:status": "curl -s https://ismat110-rag-chatbot.hf.space/",
+    "hf:test": "curl -X POST \"https://ismat110-rag-chatbot.hf.space/chat\" -H \"Content-Type: application/json\" -d \"{\\\"message\\\":\\\"Hello\\\",\\\"session_id\\\":\\\"test123\\\",\\\"language\\\":\\\"en\\\"}\"",
+    "hf:logs": "echo \"Open: https://huggingface.co/spaces/ismat110/Rag-chatbot/logs\"",
+    
+    
+    "deploy:all": "npm run build && npm run deploy && npm run hf:push",
+    "deploy:frontend": "npm run build && npm run deploy",
+    "deploy:backend": "npm run hf:push",
+    
+    
+    "test:backend": "npm run hf:status",
+    "test:chat": "npm run hf:test",
+    "test:all": "npm run test:backend && echo '✅ Backend healthy'",
+    
+    
+    "dev:frontend": "npm start",
+    "dev:clean": "npm run clear && rm -rf node_modules/.cache",
+    "dev:full": "npm run dev:clean && npm start",
+    
+    
+    "info:urls": "echo \"Frontend: https://fatima-ismat.github.io/ismat-hackathon-project-robotics/\" && echo \"Backend: https://ismat110-rag-chatbot.hf.space\"",
+    "info:docs": "echo \"API Docs: https://ismat110-rag-chatbot.hf.space/docs\""
   },
   "dependencies": {
     "@docusaurus/core": "3.9.2",
