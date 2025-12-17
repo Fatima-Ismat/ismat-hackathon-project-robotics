@@ -4,6 +4,8 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import Heading from '@theme/Heading';
+import ChatWidget from '@site/src/components/ChatWidget';
+import TestButton from '@site/src/components/TestButton';
 
 import styles from './index.module.css';
 
@@ -110,6 +112,12 @@ export default function Home(): ReactNode {
           </div>
         </section>
       </main>
+
+      {/* ✅ FLOATING CHATWIDGET BUTTON */}
+      <ChatWidget />
+
+      {/* 🧪 TEST BUTTON - Red with yellow border (should be VERY visible) */}
+      <TestButton />
     </Layout>
   );
 }
